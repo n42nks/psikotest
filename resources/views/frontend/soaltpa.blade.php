@@ -452,7 +452,9 @@
                     // 🔥 kalau soal terakhir → submit
                     localStorage.clear();
                     localStorage.removeItem('totalSisa');
-                    $('#yesform').submit();
+                    setTimeout(function() {
+                        $('#yesform').submit();
+                    }, 200); // kasih jeda sedikit
                 } else {
                     nextSoal();
                 }

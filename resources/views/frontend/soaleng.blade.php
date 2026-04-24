@@ -439,7 +439,9 @@
                 if (current >= totalSoal) {
                     localStorage.removeItem('totalSisa');
                     localStorage.clear(); // reset setelah selesai
-                    $('#yesform').submit();
+                    setTimeout(function() {
+                        $('#yesform').submit();
+                    }, 200); // kasih jeda sedikit
                 } else {
                     tampilSoal(current);
                     startTimer();
@@ -452,7 +454,9 @@
                     // 🔥 kalau soal terakhir → submit
                     localStorage.clear();
                     localStorage.removeItem('totalSisa');
-                    $('#yesform').submit();
+                    setTimeout(function() {
+                        $('#yesform').submit();
+                    }, 200); // kasih jeda sedikit
                 } else {
                     nextSoal();
                 }

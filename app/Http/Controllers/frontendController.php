@@ -157,7 +157,7 @@ class frontendController extends Controller
 
     $statusTestSelesai = DB::table('tb_jawab_peserta')
                         ->where('npm', session('npm'))
-                        ->count() >= 3; // contoh: sudah jawab semua 20 soal
+                        ->count() >= 5; // contoh: sudah jawab semua 20 soal
 
     if ($data->count() > 0) {
       $data = $data->first();
@@ -312,118 +312,53 @@ class frontendController extends Controller
 
   public function konfirmasikata($idkat)
   {
-    $waktu = waktu::where("Id",$idkat)->first();
-    session()->put("menit", $waktu->waktu);
-    session()->put("detik", "00");
-    $npm = session()->get('npm');
 
-    $data = tbpendaftar::where("NPM", $npm)->get();
-    $tpa = TbJawabPeserta::where("npm",$npm)->get();
-    $bing = DB::table('soaltpa')
-                ->join('tb_jawab_peserta','soaltpa.id_soal','=','tb_jawab_peserta.id_soal')
-                ->where('tb_jawab_peserta.npm','=',$npm)->where('soaltpa.id_kategori',$idkat)
-                ->get();
+        $waktu = waktu::where("Id",$idkat)->first();
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
 
-    if ($data->count() > 0) {
-      $data = $data->first();
-          if ($bing->count() > 0) {
+        if (TbJawabPeserta::where('npm', Session()->get('npm'))
+                ->where('id_kategori', $idkat)
+                ->exists()) {
 
-            $bing = $bing->first();
-            if ($data->NPM == $bing->npm) {
-              return redirect('/selesai');
-            }
-          }
+            return view('frontend.tpa.selesai');
 
-         if ($tpa->count() > 0)
-            {
-                return view('frontend/konfirmasi');
-
-            }
-            else {
-
-                  return redirect('/pilihsoal')->with(["ststpa" => 1]);
-            }
-
-      }
-
-    return view('frontend/konfirmasi');
+        } else {
+            return view('frontend.konfirmasi');
+        }
   }
   public function konfirmasihitung($idkat)
   {
-    $waktu = waktu::where("Id",$idkat)->first();
-    session()->put("menit", $waktu->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            waktu);
-    session()->put("detik", "00");
-    $npm = session()->get('npm');
+        $waktu = waktu::where("Id",$idkat)->first();
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
 
-    $data = tbpendaftar::where("NPM", $npm)->get();
-    $tpa = TbJawabPeserta::where("npm",$npm)->get();
-    $bing = DB::table('soaltpa')
-                ->join('tb_jawab_peserta','soaltpa.id_soal','=','tb_jawab_peserta.id_soal')
-                ->where('tb_jawab_peserta.npm','=',$npm)->where('soaltpa.id_kategori',$idkat)
-                ->get();
+        if (TbJawabPeserta::where('npm', Session()->get('npm'))
+                ->where('id_kategori', $idkat)
+                ->exists()) {
 
-    if ($data->count() > 0) {
-      $data = $data->first();
-          if ($bing->count() > 0) {
+            return view('frontend.tpa.selesai');
 
-            $bing = $bing->first();
-            if ($data->NPM == $bing->npm) {
-              return redirect('/selesai');
-            }
-          }
-
-         if ($tpa->count() > 0)
-            {
-                return view('frontend/konfirmhitung');
-
-            }
-            else {
-
-                  return redirect('/pilihsoal')->with(["ststpa" => 1]);
-            }
-
-      }
-
-    return view('frontend/konfirmhitung');
+        } else {
+            return view('frontend.konfirmhitung');
+        }
   }
 
   public function konfirmasikonsen($idkat)
   {
-    $waktu = waktu::where("Id",$idkat)->first();
-    session()->put("menit", $waktu->waktu);
-    session()->put("detik", "00");
-    $npm = session()->get('npm');
+        $waktu = waktu::where("Id",$idkat)->first();
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
 
-    $data = tbpendaftar::where("NPM", $npm)->get();
-    $tpa = TbJawabPeserta::where("npm",$npm)->get();
-    $bing = DB::table('soaltpa')
-                ->join('tb_jawab_peserta','soaltpa.id_soal','=','tb_jawab_peserta.id_soal')
-                ->where('tb_jawab_peserta.npm','=',$npm)->where('soaltpa.id_kategori',$idkat)
-                ->get();
+        if (TbJawabPeserta::where('npm', Session()->get('npm'))
+                ->where('id_kategori', $idkat)
+                ->exists()) {
 
-    if ($data->count() > 0) {
-      $data = $data->first();
-          if ($bing->count() > 0) {
+            return view('frontend.tpa.selesai');
 
-            $bing = $bing->first();
-            if ($data->NPM == $bing->npm) {
-              return redirect('/selesai');
-            }
-          }
-
-         if ($tpa->count() > 0)
-            {
-                return view('frontend/konfirmkonsen');
-
-            }
-            else {
-
-                  return redirect('/pilihsoal')->with(["ststpa" => 1]);
-            }
-
-      }
-
-    return view('frontend/konfirmkonsen');
+        } else {
+            return view('frontend.konfirmkonsen');
+        }
   }
   public function konfirmasinalar($idkat)
   {

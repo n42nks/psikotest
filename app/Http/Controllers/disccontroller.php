@@ -57,35 +57,35 @@ class disccontroller extends Controller
     }
     public function kata($idkat)
     {
-         $arit1 = DB::table("soaltpa")
+        $tpa = DB::table("soaltpa")
                 ->join("tb_kategori","soaltpa.id_kategori",'=',"tb_kategori.id_kategori" )
                 ->where('soaltpa.id_kategori',$idkat)->get();
-
-        return view('frontend/soaldisc',[
-            'arit' => $arit1,
-        ]);
+        $waktu = waktu::where("Id",$idkat)->first();
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
+        return view('frontend.soaldisc',['tpa' =>$tpa]);
 
     }
     public function hitung($idkat)
     {
-         $arit1 = DB::table("soaltpa")
+        $tpa = DB::table("soaltpa")
                 ->join("tb_kategori","soaltpa.id_kategori",'=',"tb_kategori.id_kategori" )
                 ->where('soaltpa.id_kategori',$idkat)->get();
-
-        return view('frontend/soalhitung',[
-            'arit' => $arit1,
-        ]);
+        $waktu = waktu::where("Id",$idkat)->first();
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
+        return view('frontend.soalhitung',['tpa' =>$tpa]);
 
     }
     public function konsen($idkat)
     {
-         $arit1 = DB::table("soaltpa")
+        $tpa = DB::table("soaltpa")
                 ->join("tb_kategori","soaltpa.id_kategori",'=',"tb_kategori.id_kategori" )
                 ->where('soaltpa.id_kategori',$idkat)->get();
-
-        return view('frontend/soalkonsen',[
-            'arit' => $arit1,
-        ]);
+        $waktu = waktu::where("Id",$idkat)->first();
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
+        return view('frontend.soalkonsen',['tpa' =>$tpa]);
 
     }
     public function nalar($idkat)
