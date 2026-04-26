@@ -1,117 +1,212 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Laporan</title>
+    <title>Laporan Hasil Tes</title>
+
     <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 20px;
         }
-        th, td {
-            padding: 15px;
+
+        h2 {
+            margin: 5px 0;
+        }
+
+        .header {
             text-align: center;
+            margin-bottom: 20px;
         }
-        div {
-            -webkit-column-count: 2;
-            -moz-column-count: 2;
-            column-count: 2;
+
+        .header img {
+            height: 60px;
+            margin-bottom: 10px;
         }
-        @page {
-            size: auto;
-            margin-bottom: 1px;
-            margin-top: 1px;
+
+        .title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #243A6B;
+        }
+
+        /* CARD */
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background: #243A6B;
+            color: white;
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:nth-child(even) {
+            background: #f9fafc;
+        }
+
+        /* SUMMARY BOX */
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .summary-box {
+            width: 23%;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .bg-blue { background: #3b82f6; }
+        .bg-green { background: #22c55e; }
+        .bg-red { background: #ef4444; }
+        .bg-orange { background: #f97316; }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 50px;
+            text-align: right;
+        }
+
+        @media print {
+            body {
+                margin: 10px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div id="header" style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
-        <img src="{{ asset('img/logo.png') }}" style="height: 60px; margin-right: 15px;" id="img-logo">
-        <h2 style="margin: 0;">Inlastek Welding Institut</h2>
+
+    <!-- HEADER -->
+    <div class="header">
+        <img src="{{ asset('img/logo.png') }}">
+        <h2>Inlastek Welding Institut</h2>
+        <div style="font-size:13px;">Laporan Hasil Ujian CAT</div>
     </div>
 
+    <div class="title">HASIL TEST ONLINE</div>
 
-    <br><br>
-    <center><h2>Hasil Test Online</h2></center>
+    <!-- DATA PESERTA -->
+    <div class="card">
+        <table>
+            <tr>
+                <th>NPM</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+            </tr>
+            <tr>
+                <td>{{ $npm }}</td>
+                <td>{{ $nama }}</td>
+                <td>{{ $alamat }}</td>
+            </tr>
+        </table>
+    </div>
 
-    <table style="width: 100%;">
-        <tr>
-            <th>NPM</th>
-            <th>Nama</th>
-            <th>Kota</th>
-            <th>Alamat</th>
-        </tr>
-        <tr>
-            <td>{{ $npm }}</td>
-            <td>{{ $nama }}</td>
-            <td>{{ $kota }}</td>
-            <td>{{ $alamat }}</td>
-        </tr>
-    </table>
+    <!-- HASIL PER KATEGORI -->
+    <div class="card">
+        <h3 style="margin-bottom:10px;">Hasil Per Kategori</h3>
 
-    <br>
-    <center><h2>Hasil Per Kategori</h2></center>
-    <table style="width: 100%;">
-        <tr>
-            <th>Kategori</th>
-            <th>Jumlah Soal</th>
-            <th>Benar</th>
-            <th>Salah</th>
-            <th>Nilai</th>
-        </tr>
-        @php
-            $total_benar = 0;
-            $total_salah = 0;
-            $total_soal = 0;
-        @endphp
+        <table>
+            <tr>
+                <th>Kategori</th>
+                <th>Soal</th>
+                <th>Benar</th>
+                <th>Salah</th>
+                <th>Nilai</th>
+            </tr>
 
-        @foreach($hasilPerKategori as $hasil)
-        @php
-            $total_benar += $hasil->hasil;
-            $total_salah += $hasil->salah;
-            $total_soal += $hasil->jumlah;
-        @endphp
-        <tr>
-            <td>{{ $hasil->kategori }}</td>
-            <td>{{ $hasil->jumlah }}</td>
-            <td>{{ $hasil->hasil }}</td>
-            <td>{{ $hasil->salah }}</td>
-            <td>{{ $hasil->hasil }}</td>
-        </tr>
-        @endforeach
-    </table>
+            @php
+                $total_benar = 0;
+                $total_salah = 0;
+                $total_soal = 0;
+            @endphp
 
-    <br>
-    <center><h2>Rekapitulasi Total</h2></center>
-    <table style="width: 100%;">
-        <tr>
-            <th>Total Soal</th>
-            <th>Total Benar</th>
-            <th>Total Salah</th>
-            <th>Total Nilai</th>
-        </tr>
-        <tr>
-            <td>{{ $total_soal }}</td>
-            <td>{{ $total_benar }}</td>
-            <td>{{ $total_salah }}</td>
-            <td>{{ $total_benar }}</td>
-        </tr>
-    </table>
+            @foreach($hasilPerKategori as $hasil)
+            @php
+                $total_benar += $hasil->hasil;
+                $total_salah += $hasil->salah;
+                $total_soal += $hasil->jumlah;
+            @endphp
+            <tr>
+                <td>{{ $hasil->kategori }}</td>
+                <td>{{ $hasil->jumlah }}</td>
+                <td style="color:#22c55e; font-weight:bold;">{{ $hasil->hasil }}</td>
+                <td style="color:#ef4444; font-weight:bold;">{{ $hasil->salah }}</td>
+                <td>{{ $hasil->hasil }}</td>
+            </tr>
+            @endforeach
+        </table>
+    </div>
 
+    <!-- REKAP -->
+    <div class="card">
+        <h3>Rekapitulasi</h3>
+
+        <div class="summary">
+            <div class="summary-box bg-blue">
+                Total Soal<br>{{ $total_soal }}
+            </div>
+
+            <div class="summary-box bg-green">
+                Benar<br>{{ $total_benar }}
+            </div>
+
+            <div class="summary-box bg-red">
+                Salah<br>{{ $total_salah }}
+            </div>
+
+            <div class="summary-box bg-orange">
+                Nilai<br>{{ $total_benar }}
+            </div>
+        </div>
+    </div>
+
+    <!-- STATUS -->
     @if ($total_soal === 0)
-        <p style="text-align:center; color:red;">Belum Melakukan Ujian</p>
+        <p style="text-align:center; color:red; font-weight:bold;">
+            ⚠ Belum Melakukan Ujian
+        </p>
     @endif
 
-    <br><br><br>
-    <div style="width: 100%; text-align: right; padding-right: 50px;">
+    <!-- FOOTER -->
+    <div class="footer">
         {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
-        <br><br><br><br>
+        <br><br><br>
+
         <strong>Panitia Seleksi</strong>
         <br><br><br>
+
         <u>(...................................)</u>
     </div>
 
     <script>
         window.print();
     </script>
+
 </body>
 </html>

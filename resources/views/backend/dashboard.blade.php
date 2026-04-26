@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admin | Inlastek</title>
+  <title>Admin | Sistem CAT</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
   <meta name="csrf-token" content="{{ csrf_token() }}" >
+  <link rel="shortcut icon" href="{{ asset('img/logo_tok.png') }}" type="image/x-icon">
   <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="{{asset('bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
   <!-- Font Awesome -->
@@ -39,28 +40,20 @@
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{{asset('dist/css/skins/_all-skins.min.css')}}">
 
-
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   @yield('css')
 </head>
-<body class="hold-transition sidebar-mini skin-purple-light">
+<body class="hold-transition sidebar-mini skin-blue-light">
 <div class="wrapper">
 
   <header class="main-header">
     <!-- Logo -->
     <a href="#" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>LT</span>
+      <span class="logo-mini"><b>A</b>TC</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>Inlastek</span>
+      <span class="logo-lg"><b>Admin</b> Sistem CAT</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -119,9 +112,9 @@
             </ul>
           </li>
           <!-- Control Sidebar Toggle Button -->
-          <li>
+          {{-- <li>
             <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-          </li>
+          </li> --}}
         </ul>
       </div>
     </nav>
@@ -160,31 +153,11 @@
 
           </a>
         </li>
-        <li class="treeview @yield('menusoal')">
-          <a href="#">
-            <i class="fa fa-book"></i>
-            <span>Data Soal</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+
+         <li class="nav-item @yield('tpa')">
+           <a class="nav-link" href="{{url('admin/soal-tpa')}}">
+            <i class="fa fa-book"></i> <span>Soal Psikotest</span>
           </a>
-          <ul class="treeview-menu">
-            <!-- <li class="@yield('datasoal')"><a href="{{url('admin/soal')}}"><i class="fa fa-circle-o"></i> Soal Disc</a></li> -->
-            <li class="@yield('tpa')"><a href="{{url('admin/soal-tpa')}}"><i class="fa fa-circle-o"></i> Soal Psikotest</a></li>
-            <!-- <li class="treeview @yield('eng')" style="height: auto;">
-              <a href="#"><i class="fa fa-circle-o"></i> Bhs Inggris
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu" style="@yield('eng/soal/display')" style="display: none;">
-                <li class="@yield('eng/cerita')"><a href="{{url('admin/cerita/eng')}}"><i class="fa fa-circle-o"></i> Cerita</a></li>
-                <li class="@yield('eng/petunjuk')"><a href="{{url('admin/petunjuk/eng')}}"><i class="fa fa-circle-o"></i> Petunjuk</a></li>
-                <li class="@yield('eng/soal')"><a href="{{url('admin/soal/eng')}}"><i class="fa fa-circle-o"></i> Soal</a></li>
-                <li class="@yield('eng/sound')"><a href="{{url('admin/sound/eng')}}"><i class="fa fa-circle-o"></i> Suara</a></li>
-              </ul>
-            </li> -->
-          </ul>
         </li>
         <li class="nav-item @yield('admin')">
            <a class="nav-link" href="{{url('admin/dataadmin')}}">
@@ -233,14 +206,14 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.4.18
+      <b>Version</b> 1.0
     </div>
-    <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rights
+    <strong>Copyright &copy; <?php echo date('Y') ?> <a href="#">Admin CAT</a>.</strong> All rights
     reserved.
   </footer>
 
   <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark" style="display: none;">
+  {{-- <aside class="control-sidebar control-sidebar-dark" style="display: none;">
     <!-- Create the tabs -->
     <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
       <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
@@ -427,10 +400,8 @@
       </div>
       <!-- /.tab-pane -->
     </div>
-  </aside>
-  <!-- /.control-sidebar -->
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
+  </aside> --}}
+
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->

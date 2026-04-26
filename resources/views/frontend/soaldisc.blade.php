@@ -274,11 +274,12 @@
 @section('content')
     <form id="yesform" action="{{ url('/storetpa') }}" method="POST">
         @csrf
+        <input type="hidden" name="waktu_habis" id="waktu_habis" value="0">
         <div class="box box-purple">
 
             <!-- HEADER -->
             <div class="box-header header-modern">
-                <h4 class="title">Tes Karakteristik Pribadi</h4>
+                <h4 class="title">Tes Karateristik Pribadi</h4>
 
                 <div class="timer-wrapper">
 
@@ -305,6 +306,7 @@
                     @foreach ($tpa as $index => $item)
                         <div class="soal-item" data-index="{{ $index }}" style="display:none;">
                             <input type="hidden" name="{{ 'ferin' . $item->id_soal }}" value="{{ $item->id_soal }}">
+                            <input type="hidden" name="id_kat" value="{{ $item->id_kategori }}">
                             <h4 style="margin-bottom:10px;">
                                 Soal No. <b>{{ $index + 1 }}</b>
                             </h4>
@@ -468,6 +470,13 @@
                     background: '#fee2e2',
                     border: '1px solid red'
                 });
+            }
+
+            if (totalSisa < 0) {
+
+                $('#waktu_habis').val(1); // 🔥 tandai waktu habis
+
+                $('#yesform').submit();
             }
             // 🔥 SIMPAN JAWABAN
             $('input[type=radio]').on('change', function() {

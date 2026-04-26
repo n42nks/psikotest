@@ -3,67 +3,99 @@
 
 @section('css')
     <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            overflow: hidden;
-            /* ❌ hilangkan scroll */
-        }
-
-        /* Override bawaan template */
-        .content-wrapper,
-        .content,
-        .container {
-            height: 100%;
-        }
-
-        .card-modern {
+        /* PROFILE CARD */
+        .card-profile-modern {
             background: white;
             border-radius: 16px;
+            padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
         }
 
-        .card-header-modern {
-            background: linear-gradient(135deg, #243A6B, #1e2f57);
-            color: white;
-            padding: 20px;
-            text-align: center;
+        .avatar {
+            width: 90px;
+            border-radius: 50%;
+            margin-bottom: 15px;
         }
 
-        .card-body-modern {
-            padding: 30px;
+        .name {
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-        /* INFO */
-        .info-item {
+        .info div {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #eee;
-            font-size: 15px;
         }
 
-        .info-item span {
+        .info span {
             color: #64748b;
         }
 
-        .info-item strong {
-            color: #111827;
+        .btn-logout {
+            margin-top: 20px;
+            display: block;
+            padding: 10px;
+            background: #ef4444;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        /* INSTRUCTION CARD */
+        .card-instruction {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-instruction {
+            background: linear-gradient(135deg, #243A6B, #1e2f57);
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .body-instruction {
+            padding: 25px;
+        }
+
+        /* RULE */
+        .rule {
+            padding: 12px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            margin-bottom: 10px;
+        }
+
+        .rule.warning {
+            background: #fef3c7;
+        }
+
+        /* FINAL WARNING */
+        .final-warning {
+            text-align: center;
+            margin: 20px 0;
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 16px;
         }
 
         /* BUTTON */
         .btn-start {
-            padding: 12px 30px;
+            width: 100%;
+            padding: 14px;
             background: linear-gradient(90deg, #22c55e, #16a34a);
             color: white;
             border-radius: 12px;
             border: none;
             font-weight: bold;
             font-size: 16px;
-            transition: 0.3s;
             box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+            transition: 0.3s;
         }
 
         .btn-start:hover {
@@ -71,98 +103,98 @@
         }
     </style>
 @endsection
+
 @section('content')
 
-    <div class="center-page">
+<div class="container" style="margin-top:30px;">
 
-        <div class="card-modern">
+    <div class="row">
 
-            <!-- HEADER -->
-            <div class="card-header-modern">
-                <h3>📊 Data Peserta Tes</h3>
-            </div>
+        <!-- PROFILE -->
+        <div class="col-md-4">
+            <div class="card-profile-modern text-center">
 
-            <!-- BODY -->
-            <div class="card-body-modern">
+                <img src="{{ asset('img/icon.png') }}" class="avatar">
 
-                <div class="info-item">
-                    <span>Nomor Peserta</span>
-                    <strong>{{ session()->get('npm') }}</strong>
+                <h3 class="name">{{ session()->get('nama') }}</h3>
+
+                <div class="info">
+                    <div><span>No Peserta</span><b>{{ session()->get('npm') }}</b></div>
+                    <div><span>Tanggal Lahir</span><b>{{ session()->get('tgl') }}</b></div>
+                    <div><span>Kota</span><b>{{ session()->get('tmp') }}</b></div>
                 </div>
 
-                <div class="info-item">
-                    <span>Nama Peserta</span>
-                    <strong>{{ session()->get('nama') }}</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Jenis Test</span>
-                    <strong>Tes Wawasan Kebangsaan</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Tanggal</span>
-                    <strong>{{ date('d M Y') }}</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Kesempatan</span>
-                    <strong>1 Kali</strong>
-                </div>
-
-                <!-- BUTTON -->
-                <div class="text-center" style="margin-top:25px;">
-                    <button class="btn-start" data-toggle="modal" data-target="#modal-info">
-                        🚀 Mulai Tes
-                    </button>
-                </div>
+                <a href="{{ url('/logout') }}" class="btn-logout">
+                    Logout
+                </a>
 
             </div>
-
         </div>
 
-    </div>
-
-    <div class="modal fade" id="modal-info">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius:15px; overflow:hidden;">
+        <!-- INSTRUKSI -->
+        <div class="col-md-8">
+            <div class="card-instruction">
 
                 <!-- HEADER -->
-                <div style="background:linear-gradient(135deg,#243A6B,#1e2f57); color:white; padding:20px;">
-                    <h4 style="margin:0;">📢 Peraturan Tes</h4>
+                <div class="header-instruction">
+                    ⚠️ Petunjuk Pengerjaan
                 </div>
 
                 <!-- BODY -->
-                <div class="modal-body" style="padding:25px;">
+                <div class="body-instruction">
 
-                    <ul style="line-height:1.8; color:#374151; padding-left:18px;">
-                        <li>Kesempatan hanya <b>1 kali</b></li>
-                        <li>Jumlah soal: <b>10</b></li>
-                        <li>Durasi: <b>2 menit</b></li>
-                        <li>Jangan menutup halaman selama tes</li>
-                        <li>Pastikan semua soal terjawab</li>
-                    </ul>
-
-                    <div style="margin-top:15px; color:#16a34a; font-weight:bold;">
-                        ✅ Selamat mengerjakan!
+                    <div class="rule">
+                        ⏱ Waktu pengerjaan: <b>4 Menit</b>
                     </div>
 
-                </div>
+                    <div class="rule">
+                        📄 Jumlah soal: <b>10 soal</b> (pilihan ganda)
+                    </div>
 
-                <!-- FOOTER -->
-                <div class="modal-footer" style="border:none; display:flex; gap:10px;">
+                    <div class="rule">
+                        🚫 Tidak bisa kembali ke soal sebelumnya
+                    </div>
 
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">
-                        Batal
-                    </button>
+                    <div class="rule warning">
+                        ⚡ Jawablah dengan yakin dan teliti
+                    </div>
 
-                    <a href="{{ url('/tpa/1') }}" class="btn btn-success" style="flex:1;">
-                        🚀 Mulai Tes
+                    <div class="final-warning">
+                        ANDA HARUS JUJUR DENGAN DIRI ANDA SENDIRI
+                    </div>
+
+                    <!-- BUTTON -->
+                    <a href="{{ url('/tpa/1') }}" class="btn-start">
+                        🚀 Kerjakan Sekarang
                     </a>
 
                 </div>
 
             </div>
         </div>
+
     </div>
+
+</div>
+@endsection
+
+@section('script')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            var stslogin = "{{ session()->get('stslogin') }}";
+
+            if (stslogin == 1) {
+                swal(
+                    'Selamat Datang Dalam Tes Online',
+                    'Good Job',
+                    'success'
+                );
+            }
+
+        });
+    </script>
+
 @endsection
