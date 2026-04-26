@@ -55,7 +55,125 @@ class HasilController extends Controller
         }
 
 		return view('/backend/hasil/cetak_hasil',compact('npm','nama','alamat','telp','hasilPerKategori'));
+    }
+    public function ceknpm(Request $request)
+    {
+        $npm = $request->npm;
 
+        // 🔥 VALIDASI
+        if (!$npm) {
+            return response()->json([
+                'data' => '<div class="alert alert-danger">NPM tidak ditemukan</div>'
+            ]);
+        }
 
+        // 🔥 DATA PESERTA
+        $peserta = DB::table('tbpendaftar')
+            ->where('NPM', $npm)
+            ->first();
+
+        if (!$peserta) {
+            return response()->json([
+                'data' => '<div class="alert alert-warning">Data peserta tidak ditemukan</div>'
+            ]);
+        }
+
+        // 🔥 HASIL PER KATEGORI (URUTKAN!)
+        $hasilPerKategori = DB::table('tb_jawab_peserta as j')
+            ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+            ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
+            ->select(
+                'k.id_kategori',
+                'k.kategori',
+                DB::raw('COUNT(s.id_soal) as jumlah'),
+                DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar'),
+                DB::raw('SUM(CASE WHEN j.jawaban_peserta != s.jawaban THEN 1 ELSE 0 END) as salah')
+            )
+            ->where('j.npm', $npm)
+            ->groupBy('k.id_kategori', 'k.kategori')
+            ->orderBy('k.id_kategori', 'ASC') // 🔥 penting!
+            ->get();
+
+        // 🔥 HITUNG TOTAL
+        $totalBenar = $hasilPerKategori->sum('benar');
+        $totalSalah = $hasilPerKategori->sum('salah');
+        $totalSoal  = $hasilPerKategori->sum('jumlah');
+
+        // 🔥 NILAI (0 - 100)
+        $nilai = $totalSoal > 0 ? round(($totalBenar / $totalSoal) * 100, 2) : 0;
+
+        // 🔥 RENDER HTML
+        $html = view('backend.partials.hasil_npm', compact(
+            'peserta',
+            'hasilPerKategori',
+            'totalBenar',
+            'totalSalah',
+            'totalSoal',
+            'nilai'
+        ))->render();
+
+        // 🔥 DATA GRAFIK (DINAMIS!)
+        return response()->json([
+            'data' => $html,
+
+            // contoh mapping ke grafik
+            'hasilta' => $totalSoal,
+            'hasiltb' => $totalBenar,
+            'hasiltc' => $totalSalah,
+            'hasiltd' => $nilai,
+
+            // kalau mau DISC / lainnya tetap bisa
+            'hasilD' => 0,
+            'hasilI' => 0,
+            'hasilS' => 0,
+            'hasilC' => 0,
+
+            'hasila' => 0,
+            'hasilb' => 0,
+            'hasilc' => 0,
+            'hasild' => 0,
+        ]);
+    }
+
+    public function hasilsemua()
+    {
+        $peserta = DB::table('tbpendaftar')->get();
+
+        $data = [];
+
+        foreach ($peserta as $p) {
+
+            $hasil = DB::table('tb_jawab_peserta as j')
+                ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+                ->select(
+                    DB::raw('COUNT(s.id_soal) as jumlah'),
+                    DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar'),
+                    DB::raw('SUM(CASE WHEN j.jawaban_peserta != s.jawaban THEN 1 ELSE 0 END) as salah')
+                )
+                ->where('j.npm', $p->NPM)
+                ->first();
+
+            $totalSoal = $hasil->jumlah ?? 0;
+            $benar = $hasil->benar ?? 0;
+            $salah = $hasil->salah ?? 0;
+
+            $nilai = $totalSoal > 0 ? round(($benar / $totalSoal) * 100, 2) : 0;
+
+            $data[] = [
+                'npm' => $p->NPM,
+                'nama' => $p->Nama,
+                'total' => $totalSoal,
+                'benar' => $benar,
+                'salah' => $salah,
+                'nilai' => $nilai
+            ];
+        }
+
+        // kirim ke view partial
+        $html = view('backend.partials.hasil_semua', compact('data'))->render();
+
+        return response()->json([
+            'data' => $html
+        ]);
     }
 }

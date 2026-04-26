@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\tbpendaftar;
 use App\Imports\DaftarImport;
 use Excel;
+use Carbon\Carbon;
+use DB;
 class PendaftarController extends Controller
 {
     //
@@ -33,39 +35,63 @@ class PendaftarController extends Controller
 
     public function tambah(){
         return view("backend/daftar/pendaftarT");
-     }
+    }
+
+    public function generateNomorPendaftar()
+    {
+        // Ambil tahun dan bulan sekarang
+        $tahun = Carbon::now()->format('Y');
+        $bulan = Carbon::now()->format('m');
+
+        // Ambil nomor urut terakhir dari database
+        $lastEntry = DB::table('tbpendaftar')
+                        ->whereYear('TGL_DAFTAR', $tahun)
+                        ->whereMonth('TGL_DAFTAR', $bulan)
+                        ->orderBy('TGL_DAFTAR', 'desc')
+                        ->first();
+
+        // Tentukan nomor urut
+        if ($lastEntry) {
+            $lastNumber = intval(substr($lastEntry->NPM, -3)); // Ambil 3 digit terakhir
+            $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT); // Tambah 1 dan format ke 3 digit
+        } else {
+            $newNumber = '001'; // Jika belum ada data, mulai dari 001
+        }
+
+        // Format akhir: YYYY/MM/NNN
+        return "{$tahun}{$bulan}{$newNumber}";
+    }
+
     public function simpanpendaftar(Request $req, tbpendaftar $pd, $status = 0, $pesan = "Terjadi Kesalahan"){
         $req->validate([
-            "npm"       => "numeric",
             "tgl_daftar"      => "required",
-            "gel"      => "required",
             "nama"      => "required",
             "tmp_lahir"      => "required",
             "tgl_lahir"      => "required",
-            "jk"      => "required",
-            "kota"      => "required",
             "alamat"      => "required",
+            "kota"      => "required",
             "telp"      => "required",
-            "agama"   => "required"
+            "agama"   => "required",
+            "jk"      => "required"
         ],[
             "required"          => "Tidak boleh kosong",
             "numeric"           => "Angka saja"
         ]);
 
+        $nomorPendaftar = $this->generateNomorPendaftar();
         try {
             $insert = $pd->create([
-                "NPM"      => $req->npm,
-                "TGL_DAFTAR"     => $req->tgl_daftar,
-                "GEL_DAFTAR"     => $req->gel,
-                "NAMA"      => $req->nama,
-                "TMP_LAHIR"     => $req->tmp_lahir,
-                "TGL_LAHIR"     => $req->tgl_lahir,
-                "JKELAMIN"      => $req->jk,
-                "AGAMA"     => $req->agama,
-                "ALAMAT1"     => $req->alamat,
-                "TELEPON"     => $req->telp,
-                "KOTA"     => $req->kota,
-                "KD_JURUSAN"  => 6
+                "NPM"      => $nomorPendaftar,
+                "Tgl_daftar"     => $req->tgl_daftar,
+                "Nama"      => $req->nama,
+                "Tmp_lahir"     => $req->tmp_lahir,
+                "Tgl_lahir"     => $req->tgl_lahir,
+                "Alamat"     => $req->alamat,
+                "Kota"     => $req->kota,
+                "Telp"     => $req->telp,
+                "Agama"     => $req->agama,
+                "Jkelamin"      => $req->jk,
+                "Password"  => Carbon::parse($req->tgl_lahir)->format('Ymd')
             ]);
             $status = 1;
             $pesan = "Data berhasil dismpan";

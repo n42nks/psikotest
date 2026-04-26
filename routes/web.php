@@ -94,7 +94,7 @@ Route::group(["middleware" => "admin"], function(){
 	Route::post('/deletewaktu/{Id}','AdminController@deletewaktu');
 
     Route::get('admin/hasilseluruh','HasilsController@test');
-	Route::post('admin/hasilsemua','HasilsController@tampilhasiltpa');
+	Route::post('admin/hasilsemua','HasilController@hasilsemua');
 	Route::get("/admin/cetak-hasil-tpa", "HasilsController@cetakhasiltpa");
 	Route::get("/admin/cetak-hasil-ing", "HasilsController@cetakhasiling");
 

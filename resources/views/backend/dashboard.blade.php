@@ -21,8 +21,7 @@
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{{asset('dist/css/skins/_all-skins.min.css')}}">
   <!-- Morris chart -->
-  <link rel="stylesheet" href="{{asset('bower_components/morris.js/morris.css')}}">
-  <!-- jvectormap -->
+    <!-- jvectormap -->
   <link rel="stylesheet" href="{{asset('bower_components/jvectormap/jquery-jvectormap.css')}}">
   <!-- Date Picker -->
   <link rel="stylesheet" href="{{asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
@@ -149,7 +148,7 @@
         <li class="header">MAIN NAVIGATION</li>
         <li class="nav-item @yield('pendaftar')">
           <a class="nav-link" href="{{url('admin/pendaftar')}}">
-            <i class="fa fa-group"></i> <span>Data Pendaftar</span>
+            <i class="fa fa-group"></i> <span>Data Peserta</span>
 
           </a>
         </li>
@@ -417,9 +416,6 @@
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- Morris.js charts -->
-<script src="{{asset('bower_components/raphael/raphael.min.js')}}"></script>
-<script src="{{asset('bower_components/morris.js/morris.min.js')}}"></script>
 <!-- Sparkline -->
 <script src="{{asset('bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
 <!-- jvectormap -->
@@ -436,8 +432,6 @@
 <script src="{{asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
-<!-- FastClick -->
-<script src="{{asset('bower_components/fastclick/lib/fastclick.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('dist/js/adminlte.min.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->

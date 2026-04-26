@@ -1,11 +1,10 @@
-@extends('backend/dashboard')
-@section('hasilseluruh', 'active')
-@section('header')
+<?php $__env->startSection('hasilseluruh', 'active'); ?>
+<?php $__env->startSection('header'); ?>
     <h1>Hasil Tes CAT Seluruh Peserta</h1>
     <br>
-@endsection
-@section('content')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <!-- disc -->
     <div class="row">
         <div class="col-lg-12">
@@ -39,8 +38,8 @@
         </div>
     </div>
 
-@endsection
-@section('js')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('js'); ?>
     <script>
         $(document).ready(function() {
             $.ajaxSetup({
@@ -51,7 +50,7 @@
 
             $('#tampil').click(function() {
                 $.ajax({
-                    url: "{{ url('/admin/hasilsemua') }}",
+                    url: "<?php echo e(url('/admin/hasilsemua')); ?>",
                     type: 'POST',
                     beforeSend: function() {
                         $("#wait").html(
@@ -74,4 +73,6 @@
         });
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('backend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\psikotest\resources\views/backend/hasil/hasil_seluruh.blade.php ENDPATH**/ ?>

@@ -1,32 +1,33 @@
-@extends('backend.dashboard')
-@section('pendaftar','active')
-@section('header')
+<?php $__env->startSection('pendaftar','active'); ?>
+<?php $__env->startSection('header'); ?>
 <h1>List Data Peserta</h1>
-<a class="btn btn-primary" href="{{url('/admin/pendaftar/tambah')}}">Tambah Data</a>
+<a class="btn btn-primary" href="<?php echo e(url('/admin/pendaftar/tambah')); ?>">Tambah Data</a>
 <div class="container">
         <div class="row" style="padding-top: 30px">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ url('/admin/pendaftar/upload') }}" method="post" enctype="multipart/form-data">
-                            @csrf
+                        <form action="<?php echo e(url('/admin/pendaftar/upload')); ?>" method="post" enctype="multipart/form-data">
+                            <?php echo csrf_field(); ?>
 
-                            @if (session('success'))
+                            <?php if(session('success')): ?>
                             <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                            @endif
+                                <?php echo e(session('success')); ?>
 
-                            @if (session('error'))
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if(session('error')): ?>
                                 <div class="alert alert-success">
-                                    {{ session('error') }}
+                                    <?php echo e(session('error')); ?>
+
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
                             <div class="form-group">
                                 <label for="">File (.xls, .xlsx)</label>
                                 <input type="file" class="form-control" name="file">
-                                <p class="text-danger">{{ $errors->first('file') }}</p>
+                                <p class="text-danger"><?php echo e($errors->first('file')); ?></p>
                             </div>
                             <div class="form-group">
                                 <button class="btn btn-primary btn-sm">Upload</button>
@@ -38,8 +39,8 @@
             <div class="col-md-6"></div>
         </div>
     </div>
-@endsection
-@section('content')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
@@ -60,18 +61,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($tbpendaftar as $pendaftar)
-                  <td>{{$pendaftar->NPM}}</td>
-                  <td>{{$pendaftar->Nama}}</td>
-                  <td>{{$pendaftar->Tgl_lahir}}</td>
-                  <td>{{$pendaftar->Tmp_lahir}}</td>
-                  <td>{{$pendaftar->Telp}}</td>
+                <?php $__currentLoopData = $tbpendaftar; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pendaftar): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <td><?php echo e($pendaftar->NPM); ?></td>
+                  <td><?php echo e($pendaftar->Nama); ?></td>
+                  <td><?php echo e($pendaftar->Tgl_lahir); ?></td>
+                  <td><?php echo e($pendaftar->Tmp_lahir); ?></td>
+                  <td><?php echo e($pendaftar->Telp); ?></td>
                   <td style="text-align:center;">
 
-                    <a href="#" onclick="hapuspendaftar('{{url('/admin/pendaftar/hapus-'.$pendaftar->NPM)}}')" type="button" class="btn btn-danger btn-sm">Hapus</a>
+                    <a href="#" onclick="hapuspendaftar('<?php echo e(url('/admin/pendaftar/hapus-'.$pendaftar->NPM)); ?>')" type="button" class="btn btn-danger btn-sm">Hapus</a>
                   </td>
                 </tr>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
               </table>
             </div>
@@ -105,9 +106,9 @@
     </div>
 </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('js')
+<?php $__env->startSection('js'); ?>
 
 <script>
 // $(document).ready(function(){
@@ -126,7 +127,7 @@ function hapuspendaftar(npm){
 </script>
 <script>
 var sukses = 1;
-    if(sukses = {{Session::get('status')}}){
+    if(sukses = <?php echo e(Session::get('status')); ?>){
         md.notif("top","right", "Berhasil ...", "info");
     }else{
         md.notif("top","right", "Gagal ...", "danger");
@@ -135,4 +136,6 @@ var sukses = 1;
 
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('backend.dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\psikotest\resources\views/backend/daftar/data_pendaftar.blade.php ENDPATH**/ ?>
