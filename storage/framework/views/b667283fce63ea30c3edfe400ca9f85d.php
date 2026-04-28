@@ -1,7 +1,6 @@
-@extends('frontend/dashboard')
-@section('pendaftar', 'active')
+<?php $__env->startSection('pendaftar', 'active'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container">
         <div class="login-box" style="margin-top: 40px;">
 
@@ -14,8 +13,9 @@
 
                 <p class="login-box-msg">Masukkan No Pendaftaran dan Password</p>
 
-                <form action="{{ url('/login') }}" method="post">
-                    {{ csrf_field() }}
+                <form action="<?php echo e(url('/login')); ?>" method="post">
+                    <?php echo e(csrf_field()); ?>
+
 
                     <!-- NO PENDAFTARAN -->
                     <div class="form-group has-feedback">
@@ -23,9 +23,9 @@
                         <input type="text" class="form-control" name="npm" placeholder="Masukkan No Pendaftaran">
                         <span class="fa fa-user form-control-feedback"></span>
 
-                        @if ($errors->has('npm'))
-                            <small class="text-danger">{{ $errors->first('npm') }}</small>
-                        @endif
+                        <?php if($errors->has('npm')): ?>
+                            <small class="text-danger"><?php echo e($errors->first('npm')); ?></small>
+                        <?php endif; ?>
                     </div>
 
                     <!-- PASSWORD -->
@@ -34,9 +34,9 @@
                         <input type="password" class="form-control" name="nama" placeholder="Masukkan Password">
                         <span class="fa fa-lock form-control-feedback"></span>
 
-                        @if ($errors->has('nama'))
-                            <small class="text-danger">{{ $errors->first('nama') }}</small>
-                        @endif
+                        <?php if($errors->has('nama')): ?>
+                            <small class="text-danger"><?php echo e($errors->first('nama')); ?></small>
+                        <?php endif; ?>
                     </div>
 
                     <!-- INFO -->
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="col-xs-6">
-                            <a href="{{ url('/') }}" class="btn btn-default btn-block" style="border-radius:6px;">
+                            <a href="<?php echo e(url('/')); ?>" class="btn btn-default btn-block" style="border-radius:6px;">
                                 Batal
                             </a>
                         </div>
@@ -68,15 +68,15 @@
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
 
-            var stslogin = "{{ session()->get('stslogin') }}";
+            var stslogin = "<?php echo e(session()->get('stslogin')); ?>";
 
             if (stslogin == 2) {
                 swal(
@@ -86,18 +86,20 @@
                 );
             }
 
-            @if (session('success'))
+            <?php if(session('success')): ?>
                 swal({
                     title: 'Pendaftaran Berhasil',
                     type: 'success',
                     html: `
-            <b>No Pendaftaran : {{ session('nopendaftaran') }}</b> <br>
-            <b>Password : {{ session('password') }} </b><br><br>
+            <b>No Pendaftaran : <?php echo e(session('nopendaftaran')); ?></b> <br>
+            <b>Password : <?php echo e(session('password')); ?> </b><br><br>
             Simpan data ini untuk login ujian CAT
         `
                 });
-            @endif
+            <?php endif; ?>
 
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\psikotest\resources\views/frontend/welcome.blade.php ENDPATH**/ ?>

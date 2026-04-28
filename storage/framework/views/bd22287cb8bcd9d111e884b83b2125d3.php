@@ -9,12 +9,12 @@
             <div class="box-body">
                 <table class="table">
                     <tr>
-                        <td width="150">Nomer Peserta</td>
-                        <td>{{ $peserta->NPM }}</td>
+                        <td width="150">NPM</td>
+                        <td><?php echo e($peserta->NPM); ?></td>
                     </tr>
                     <tr>
                         <td>Nama</td>
-                        <td>{{ $peserta->Nama }}</td>
+                        <td><?php echo e($peserta->Nama); ?></td>
                     </tr>
                 </table>
             </div>
@@ -36,28 +36,20 @@
                         <th>Benar</th>
                         <th>Salah</th>
                         <th>Nilai</th>
-                        <th>Status</th>
                     </tr>
 
-                    @foreach ($hasilPerKategori as $h)
-                        @php
+                    <?php $__currentLoopData = $hasilPerKategori; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $h): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php
                             $nilaiKategori = $h->jumlah > 0 ? round(($h->benar / $h->jumlah) * 100, 2) : 0;
-                        @endphp
+                        ?>
                         <tr>
-                            <td style="text-align: left;">{{ $h->kategori }}</td>
-                            <td>{{ $h->jumlah }}</td>
-                            <td style="color:green; font-weight:bold;">{{ $h->benar }}</td>
-                            <td style="color:red; font-weight:bold;">{{ $h->salah }}</td>
-                            <td><b>{{ $nilaiKategori }}</b></td>
-                            <td>
-                                @if ($nilaiKategori >= 70)
-                                    ✅ LULUS
-                                @else
-                                    ❌ TIDAK LULUS
-                                @endif
-                            </td>
+                            <td><?php echo e($h->kategori); ?></td>
+                            <td><?php echo e($h->jumlah); ?></td>
+                            <td style="color:green; font-weight:bold;"><?php echo e($h->benar); ?></td>
+                            <td style="color:red; font-weight:bold;"><?php echo e($h->salah); ?></td>
+                            <td><b><?php echo e($nilaiKategori); ?></b></td>
                         </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                 </table>
             </div>
@@ -79,42 +71,43 @@
                     <div
                         style="flex:1; background:#3b82f6; color:white; padding:15px; border-radius:10px; text-align:center;">
                         Total Soal<br>
-                        <h3>{{ $totalSoal }}</h3>
+                        <h3><?php echo e($totalSoal); ?></h3>
                     </div>
 
                     <div
                         style="flex:1; background:#22c55e; color:white; padding:15px; border-radius:10px; text-align:center;">
                         Benar<br>
-                        <h3>{{ $totalBenar }}</h3>
+                        <h3><?php echo e($totalBenar); ?></h3>
                     </div>
 
                     <div
                         style="flex:1; background:#ef4444; color:white; padding:15px; border-radius:10px; text-align:center;">
                         Salah<br>
-                        <h3>{{ $totalSalah }}</h3>
+                        <h3><?php echo e($totalSalah); ?></h3>
                     </div>
 
                     <div
                         style="flex:1; background:#f97316; color:white; padding:15px; border-radius:10px; text-align:center;">
                         Nilai<br>
-                        <h3>{{ $nilai }}</h3>
+                        <h3><?php echo e($nilai); ?></h3>
                     </div>
 
                 </div>
 
                 <div style="margin-top:20px;">
-                    @if ($nilai >= 70)
+                    <?php if($nilai >= 70): ?>
                         <div class="alert alert-success text-center" style="font-size:16px; font-weight:bold;">
                             ✅ LULUS
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="alert alert-danger text-center" style="font-size:16px; font-weight:bold;">
                             ❌ TIDAK LULUS
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+<?php /**PATH D:\xampp\htdocs\psikotest\resources\views\backend\partials\hasil_npm.blade.php ENDPATH**/ ?>

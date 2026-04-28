@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistem CAT Seleksi Perangkat Desa</title>
-  <link rel="shortcut icon" href="{{ asset('img/logo_tok.png') }}" type="image/x-icon">
+  <link rel="shortcut icon" href="<?php echo e(asset('img/logo_tok.png')); ?>" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -945,14 +945,14 @@
         <a href="#" class="navbar-brand d-flex align-items-center">
           <i class="fas fa-bars mr-3"></i>
           <span class="dual-logo">
-            <img src="{{ asset('img/atc_putih.png') }}" alt="Asia Training Center" class="nav-logo-atc">
-            <img src="{{ asset('img/asia-putih.png') }}" alt="Institut Asia" class="nav-logo-asia">
+            <img src="<?php echo e(asset('img/atc_putih.png')); ?>" alt="Asia Training Center" class="nav-logo-atc">
+            <img src="<?php echo e(asset('img/asia-putih.png')); ?>" alt="Institut Asia" class="nav-logo-asia">
           </span>
         </a>
 
         <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
           <li class="nav-item">
-            <a class="nav-link login-pill" href="{{ url('/pendaftar-login') }}">
+            <a class="nav-link login-pill" href="<?php echo e(url('/pendaftar-login')); ?>">
               <i class="far fa-user mr-2"></i>Login
             </a>
           </li>
@@ -1000,11 +1000,11 @@
                 </div>
 
                 <div class="hero-actions">
-                  <a href="{{ url('/pendaftar-login') }}" class="btn btn-hero-primary">
+                  <a href="<?php echo e(url('/pendaftar-login')); ?>" class="btn btn-hero-primary">
                     <i class="fas fa-user-lock mr-2"></i>Login ke Sistem CAT
                   </a>
-                  <a href="{{ url('daftarsiswa') }}" class="btn btn-hero-secondary">
-                    <i class="far fa-file-lines mr-2"></i>Pendaftaran Peserta
+                  <a href="#" class="btn btn-hero-secondary">
+                    <i class="far fa-file-lines mr-2"></i>Informasi Seleksi
                   </a>
                 </div>
               </div>
@@ -1142,8 +1142,8 @@
           <div class="row">
             <div class="col-lg-4 mb-4">
               <div class="footer-logos">
-                <img src="{{ asset('img/atc_putih.png') }}" alt="Asia Training Center" class="footer-logo-atc">
-                <img src="{{ asset('img/asia-putih.png') }}" class="footer-logo-asia">
+                <img src="<?php echo e(asset('img/atc_putih.png')); ?>" alt="Asia Training Center" class="footer-logo-atc">
+                <img src="<?php echo e(asset('img/asia-putih.png')); ?>" class="footer-logo-asia">
               </div>
               <div class="footer-title">Sistem CAT Seleksi Perangkat Desa</div>
               <p class="footer-copy mb-0">
@@ -1193,3 +1193,4 @@
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 </body>
 </html>
+<?php /**PATH D:\xampp\htdocs\psikotest\resources\views\frontend\landing.blade.php ENDPATH**/ ?>

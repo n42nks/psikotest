@@ -1,29 +1,30 @@
-@extends('backend/dashboard')
-@section('datahasil', 'active')
-@section('header')
+
+<?php $__env->startSection('datahasil', 'active'); ?>
+<?php $__env->startSection('header'); ?>
     <h1>Data Hasil Jawaban</h1>
     <br>
-@endsection
-@section('content')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <div class="row">
         <div class="col-lg-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <span class="text-primary">* Cari Data Sesuai Nomer Peserta</span>
+                    <span class="text-primary">* Cari Data Sesuai NPM</span>
                     <form method="POST" action="" id="frmnpm" style="padding:5px 10px 0px 40px;">
-                        {{ csrf_field() }}
+                        <?php echo e(csrf_field()); ?>
+
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Nomer Peserta</label>
+                            <label class="col-sm-3 col-form-label">NPM</label>
                             <div class="col-sm-5">
 
 
                                 <select class="form-control select2" name="npm" id="npm" style="width: 100%;">
 
-                                    <option value="">Masukan Nomer Peserta</option>
-                                    @foreach ($tbpendaftar as $itm)
-                                        <option>{{ $itm->NPM }}</option>
-                                    @endforeach
+                                    <option value="">Masukan NPM</option>
+                                    <?php $__currentLoopData = $tbpendaftar; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $itm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option><?php echo e($itm->NPM); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                         </div>
@@ -32,8 +33,8 @@
                             <div class="col-sm-3 "></div>
                             <div class="col-sm-5">
                                 <input type="button" name="submit2" id="btnLihatnpm" class="btn btn-primary btn-sm"
-                                    value="Lihat Nomer Peserta">
-                                <!-- <a href="{{ url('/admin/cek') }}">haha</a> -->
+                                    value="Lihat npm">
+                                <!-- <a href="<?php echo e(url('/admin/cek')); ?>">haha</a> -->
                             </div>
                         </div>
                     </form>
@@ -63,8 +64,8 @@
     </div>
 
 
-@endsection
-@section('js')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('js'); ?>
 
     <script>
         $(function() {
@@ -144,7 +145,7 @@
             })
         })
     </script>
-    <script type="text/javascript" src="{{ asset('grafik.js') }}"></script>
+    <script type="text/javascript" src="<?php echo e(asset('grafik.js')); ?>"></script>
 
     <script>
         $(document).ready(function() {
@@ -167,7 +168,7 @@
                 }
 
                 $.ajax({
-                    url: "{{ url('/admin/ceknpm') }}",
+                    url: "<?php echo e(url('/admin/ceknpm')); ?>",
                     type: 'POST',
                     data: {
                         npm: npm
@@ -241,4 +242,6 @@
             });
         }
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('backend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\psikotest\resources\views/backend/hasil/data_hasil.blade.php ENDPATH**/ ?>

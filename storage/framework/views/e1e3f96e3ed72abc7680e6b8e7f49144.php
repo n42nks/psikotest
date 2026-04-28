@@ -1,7 +1,6 @@
-@extends('frontend/dashboard')
-@section('pendaftar', 'active')
+<?php $__env->startSection('pendaftar', 'active'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="row">
         <!-- FORM -->
         <div class="col-md-4">
@@ -21,12 +20,13 @@
                         <small><b>* Pastikan data yang diisi sudah benar</b></small>
                     </div>
 
-                    <form method="POST" action="{{ url('tambahsiswa') }}">
-                        {{ csrf_field() }}
+                    <form method="POST" action="<?php echo e(url('tambahsiswa')); ?>">
+                        <?php echo e(csrf_field()); ?>
+
 
                         <div class="form-group">
                             <label><i class="fa fa-calendar"></i> Tanggal Daftar</label>
-                            <input type="date" name="tgl_daftar" class="form-control" value="{{ date('Y-m-d') }}"
+                            <input type="date" name="tgl_daftar" class="form-control" value="<?php echo e(date('Y-m-d')); ?>"
                                 readonly>
                         </div>
 
@@ -79,7 +79,7 @@
                             style="background:linear-gradient(90deg,#F97316,#FB923C); color:white; font-weight:bold; border-radius:8px;">
                             <i class="fa fa-save"></i> Daftar Sekarang
                         </button>
-                        <a href="{{ url('/') }}" class="btn btn-block"
+                        <a href="<?php echo e(url('/')); ?>" class="btn btn-block"
                             style="background:linear-gradient(90deg,#6c757d,#6c757d); color:white; font-weight:bold; border-radius:8px;">
                              ← Kembali ke Beranda
                         </a>
@@ -160,4 +160,6 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\psikotest\resources\views/frontend/daftarsiswa.blade.php ENDPATH**/ ?>
