@@ -139,7 +139,7 @@
                                 <span class="info-box-icon bg-yellow"><i class="fa fa-calendar"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Jadwal</span>
-                                    <span class="info-box-number">20 Juli 2025</span>
+                                    <span class="info-box-number">20 Mei 2026</span>
                                 </div>
                             </div>
                         </div>
