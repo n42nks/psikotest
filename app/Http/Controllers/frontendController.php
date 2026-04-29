@@ -164,7 +164,7 @@ class frontendController extends Controller
 
       session()->put("nama", $data["Nama"]);
       session()->put("tgl", $data["Tgl_lahir"]);
-      session()->put("tmp", $data["Tmp_lahir"]);
+      session()->put("tmp", $data["Alamat"]);
       session()->put("npm", $data["NPM"]);
       session()->put("login", TRUE);
 

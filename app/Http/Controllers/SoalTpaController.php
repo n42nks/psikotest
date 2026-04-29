@@ -44,7 +44,27 @@ class SoalTpaController extends Controller
      */
     public function store(Request $request)
     {
-        $data2[] = array(            
+        $request->validate([
+            'id_kategori' => 'required|not_in:Pilih Kategori',
+            'soal' => 'required',
+            'A' => 'required',
+            'B' => 'required',
+            'C' => 'required',
+            'D' => 'required',
+            'jawaban' => 'required|in:A,B,C,D',
+        ], [
+            'id_kategori.required' => 'Kategori wajib dipilih',
+            'id_kategori.not_in' => 'Kategori harus dipilih',
+            'soal.required' => 'Soal tidak boleh kosong',
+            'A.required' => 'Jawaban A wajib diisi',
+            'B.required' => 'Jawaban B wajib diisi',
+            'C.required' => 'Jawaban C wajib diisi',
+            'D.required' => 'Jawaban D wajib diisi',
+            'jawaban.required' => 'Kunci jawaban wajib diisi',
+            'jawaban.in' => 'Kunci jawaban harus A/B/C/D',
+        ]);
+
+        $data2[] = array(
             'soal' => $request->input('soal'),
             'jawaban' => $request->input('jawaban'),
             'id_kategori' => $request->input('id_kategori'),
@@ -55,7 +75,7 @@ class SoalTpaController extends Controller
         );
         DB::table('soaltpa') -> insert($data2);
 
-        
+
         $select = DB::select('select * from soaltpa');
         return view ('backend.DataSoalTpa.DaftarSoal')->with('soal',$select);
     }
@@ -70,7 +90,7 @@ class SoalTpaController extends Controller
     {
          $Soal = SoalTpa::find($id);
         $kategori = kategori::all();
-        
+
         return view('backend.DataSoalTpa.UbahSoal', ['Soal'=>$Soal, 'kategori'=>$kategori]);
     }
 
