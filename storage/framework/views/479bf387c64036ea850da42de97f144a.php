@@ -1,1 +1,0 @@
-<?php /**PATH D:\xampp\htdocs\psikotest\resources\views\backend\data_soal.blade.php ENDPATH**/ ?>

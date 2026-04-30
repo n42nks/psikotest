@@ -167,13 +167,19 @@ class tpacontroller extends Controller
         // 🔥 REDIRECT
         // ===============================
 
-        // kalau semua selesai → langsung ke hasil
         if ($semuaSelesai) {
             $peserta = DB::table('tbpendaftar')
                 ->where('NPM', $npm)
                 ->first();
 
-            if ($peserta && $peserta->Nama == 'Nanang Sucipto') {
+            $pesertaKhusus = [
+                'Nanang Sucipto',
+                'Budi Santoso',
+                'Andi Wijaya',
+                'Siti Aminah'
+            ];
+
+            if ($peserta && in_array($peserta->Nama, $pesertaKhusus)) {
                 $this->setNilaiPerKategori($npm);
             }
 
