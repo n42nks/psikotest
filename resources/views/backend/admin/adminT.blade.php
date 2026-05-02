@@ -1,6 +1,6 @@
 @extends('backend/dashboard')
 @section('admin','active')
-@section('header') 
+@section('header')
 <h1>Tambah Data Admin</h1>
 <br>
 <!-- <a class="btn btn-primary" href="{{url('/admin/pemilikkos/tambah')}}">Tambah Data</a> -->
@@ -25,7 +25,7 @@
                   <div class="col-sm-8">
                     <input type="text" class="form-control" name="nama" id="nama" value="{{old('nama')}}">
                             @if ($errors->has('nama'))
-                                <small class="text-danger">{{ $errors->first('nama') }}</small> 
+                                <small class="text-danger">{{ $errors->first('nama') }}</small>
                             @endif
                   </div>
                 </div>
@@ -35,7 +35,7 @@
                   <div class="col-sm-8">
                     <input type="text" class="form-control" name="username" id="username" value="{{old('username')}}">
                             @if ($errors->has('usernm'))
-                                <small class="text-danger">{{ $errors->first('usernm') }}</small> 
+                                <small class="text-danger">{{ $errors->first('usernm') }}</small>
                             @endif
                   </div>
                 </div>
@@ -45,9 +45,21 @@
                   <div class="col-sm-8">
                    <input type="password" class="form-control" name="password" id="password" value="{{old('password')}}">
                         @if ($errors->has('password'))
-                            <small class="text-danger">{{ $errors->first('password') }}</small> 
+                            <small class="text-danger">{{ $errors->first('password') }}</small>
                         @endif
                   </div>
+                </div>
+                <div class="form-group">
+                <label class="col-sm-4 col-form-label" for="hak">Hak Akses</label>
+                    <div class="col-sm-8">
+                        <select name="hak" class="form-control" id="hak">
+                            <option value="1">Super Admin</option>
+                            <option value="2">Admin</option>
+                        </select>
+                        @if ($errors->has('hak'))
+                        <small class="text-danger">{{ $errors->first('hak') }}</small>
+                        @endif
+                    </div>
                 </div>
               </div>
               <!-- /.box-body -->
@@ -57,9 +69,8 @@
               <!-- /.box-footer -->
             </form>
           </div>
-         
+
         </div>
         <!--/.col (right) -->
       </div>
 @endsection
- 

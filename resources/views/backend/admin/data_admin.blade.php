@@ -1,6 +1,6 @@
 @extends('backend/dashboard')
 @section('admin','active')
-@section('header') 
+@section('header')
 <h1>Data Admin</h1>
 <br>
 <a class="btn btn-primary" href="{{url('/admin/dataadmin/tambah')}}">Tambah Data</a>
@@ -19,7 +19,8 @@
                 <tr>
                   <th width="5%">No.</th>
                   <th width="30%" style="text-align: center;">Nama</th>
-                  <th width="50%" style="text-align: center;">User Name</th>
+                  <th width="30%" style="text-align: center;">User Name</th>
+                  <th width="10%" style="text-align: center;">Hak Akses</th>
                   <th width="15%" style="text-align: center;">Opsi</th>
                 </tr>
                 </thead>
@@ -31,6 +32,13 @@
                   <td>{{$no}}</td>
                   <td>{{$admin->nama}}</td>
                   <td>{{$admin->username}}</td>
+                  <td>
+                    @if($admin->role == 1)
+                        Super Admin
+                    @else
+                        Admin
+                    @endif
+                  </td>
                    <td style="text-align:center;">
                     <a rel="tooltip" title="Edit"  type="button" class="btn btn-warning btn-sm" href="{{url('/admin/dataadmin/update-'.$admin->IdAdmin)}}">Edit</a>
                     <a href="#" onclick="hapusAdmin('{{url('/admin/dataadmin/hapus-'.$admin->IdAdmin)}}')" type="button" class="btn btn-danger btn-sm">Hapus</a>
@@ -81,7 +89,7 @@
 
 <script>
 // $(document).ready(function(){
-  
+
 // })
 function hapusAdmin(idAdmin){
     $('#btnYa').attr("href", idAdmin);
@@ -104,5 +112,5 @@ var sukses = 1;
 </script>
 
 
-  
+
 @endsection

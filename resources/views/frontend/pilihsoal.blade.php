@@ -99,39 +99,46 @@
             $menus = [
                 [
                     'id' => 1,
-                    'nama' => 'TWK',
-                    'detail' => 'Tes Wawasan Kebangsaan',
+                    'nama' => 'PU',
+                    'detail' => 'Pancasila dan UUD 1945',
                     'img' => 'atc.png',
                     'url' => '/peserta/1',
                 ],
                 [
                     'id' => 2,
-                    'nama' => 'TIU',
-                    'detail' => 'Tes Intelegensi Umum',
+                    'nama' => 'PPPD',
+                    'detail' => 'Pengetahuan Pemerintah / Pemerintah Desa',
                     'img' => 'atc.png',
                     'url' => '/englishtest/2',
                 ],
                 [
                     'id' => 3,
-                    'nama' => 'TKP',
-                    'detail' => 'Tes Karakteristik Pribadi',
+                    'nama' => 'PA',
+                    'detail' => 'Pengetahuan Agama',
                     'img' => 'atc.png',
                     'url' => '/katatest/3',
                 ],
                 [
                     'id' => 4,
-                    'nama' => 'PPD',
-                    'detail' => 'Pengetahuan Pemerintahan Desa',
+                    'nama' => 'PU',
+                    'detail' => 'Pengetahuan Umum',
                     'img' => 'atc.png',
                     'url' => '/hitungtest/4',
                 ],
                 [
                     'id' => 5,
-                    'nama' => 'PAPP',
-                    'detail' => 'Pengetahuan Administrasi & Pelayanan Publik',
+                    'nama' => 'AP',
+                    'detail' => 'Administrasi Perkantoran',
                     'img' => 'atc.png',
                     'url' => '/konsentest/5',
                 ],
+                [
+                    'id' => 6,
+                    'nama' => 'PKTI',
+                    'detail' => 'Pengetahuan Komputer dan Teknologi Informasi',
+                    'img' => 'atc.png',
+                    'url' => '/nalartest/6',
+                ]
             ];
         @endphp
         @php
@@ -214,7 +221,7 @@
             @endphp
 
             @foreach ($menus as $m)
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="box"
                         style="border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.08); margin-bottom:20px; transition:0.3s;">
 
@@ -230,7 +237,7 @@
 
                             <!-- DESC -->
                             <p style="font-size:12px; color:#777;">
-                                {{ strtolower($m['detail']) }}
+                                {{ $m['detail'] }}
                             </p>
 
                             @php

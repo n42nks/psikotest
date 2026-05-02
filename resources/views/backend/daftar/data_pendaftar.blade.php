@@ -2,8 +2,10 @@
 @section('pendaftar','active')
 @section('header')
 <h1>List Data Peserta</h1>
-<a class="btn btn-primary" href="{{url('/admin/pendaftar/tambah')}}">Tambah Data</a>
-<div class="container">
+@if(session('role') == '1')
+    <a class="btn btn-primary" href="{{url('/admin/pendaftar/tambah')}}">Tambah Data</a>
+@endif
+{{-- <div class="container">
         <div class="row" style="padding-top: 30px">
             <div class="col-md-6">
                 <div class="card">
@@ -37,7 +39,7 @@
             </div>
             <div class="col-md-6"></div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 @section('content')
       <div class="row">
@@ -51,12 +53,15 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th width="10%" style="text-align: center;">NPM</th>
+                  <th width="10%" style="text-align: center;">Nomer Daftar</th>
                   <th width="25%" style="text-align: center;">Nama</th>
                   <th width="10%" style="text-align: center;">Tanggal Lahir</th>
                   <th width="15%" style="text-align: center;">Tempat Lahir</th>
                   <th width="5%" style="text-align: center;">Telepon</th>
-                  <th width="5%" style="text-align: center;">Opsi</th>
+                  <th width="5%" style="text-align: center;">Password</th>
+                  @if(session('role') == '1')
+                    <th width="5%" style="text-align: center;">Opsi</th>
+                  @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -66,10 +71,12 @@
                   <td>{{$pendaftar->Tgl_lahir}}</td>
                   <td>{{$pendaftar->Tmp_lahir}}</td>
                   <td>{{$pendaftar->Telp}}</td>
-                  <td style="text-align:center;">
-
-                    <a href="#" onclick="hapuspendaftar('{{url('/admin/pendaftar/hapus-'.$pendaftar->NPM)}}')" type="button" class="btn btn-danger btn-sm">Hapus</a>
-                  </td>
+                  <td>{{$pendaftar->Password}}</td>
+                  @if(session('role') == '1')
+                    <td style="text-align:center;">
+                        <a href="#" onclick="hapuspendaftar('{{url('/admin/pendaftar/hapus-'.$pendaftar->NPM)}}')" type="button" class="btn btn-danger btn-sm">Hapus</a>
+                    </td>
+                  @endif
                 </tr>
                 @endforeach
                 </tbody>

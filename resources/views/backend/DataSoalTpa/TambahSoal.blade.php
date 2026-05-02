@@ -135,6 +135,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Jawaban E</label>
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <textarea type="text" class="form-control" id="E" name="E" required></textarea>
+                                <script>
+                                    CKEDITOR.replace('E', {
+                                        filebrowserBrowseUrl: "{{ asset('ckeditor/kcfinder/browse.php?type=files') }}",
+                                        filebrowserImageBrowseUrl: "{{ asset('ckeditor/kcfinder/browse.php?type=images') }}",
+                                        filebrowserFlashBrowseUrl: "{{ asset('ckeditor/kcfinder/browse.php?type=flash') }}",
+                                        filebrowserUploadUrl: "{{ asset('ckeditor/kcfinder/upload.php?type=files') }}",
+                                        filebrowserImageUploadUrl: "{{ asset('ckeditor/kcfinder/upload.php?type=images') }}",
+                                        filebrowserFlashUploadUrl: "{{ asset('ckeditor/kcfinder/upload.php?type=flash') }}"
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label for="exampleInputPassword1">Kunci Jawaban</label>

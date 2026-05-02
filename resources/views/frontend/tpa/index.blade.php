@@ -144,11 +144,11 @@
                 <div class="body-instruction">
 
                     <div class="rule">
-                        ⏱ Waktu pengerjaan: <b>20 Menit</b>
+                        ⏱ Waktu pengerjaan: <b>60 Menit</b>
                     </div>
 
                     <div class="rule">
-                        📄 Jumlah soal: <b>25 soal</b> (pilihan ganda)
+                        📄 Jumlah soal: <b>50 soal</b> (pilihan ganda)
                     </div>
 
                     <div class="rule">

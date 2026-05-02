@@ -27,8 +27,9 @@ class dataadminController extends Controller
             $insert = $ad->create([
             	"nama"     => $req->nama,
                 "username"     => $req->username,
-                "password"         => md5($req->password)
-            ]);         
+                "password"         => $req->password,
+                "role"      => $req->hak
+            ]);
             $status = 1;
             $pesan = "Data berhasil dismpan";
         } catch (Exception $e) {
@@ -63,7 +64,8 @@ class dataadminController extends Controller
             $update = $ad->where("IdAdmin", $req->IdAdmin)->update([
             	"nama"         => $req->nama,
             	"username"     => $req->username,
-                "password"     => md5($req->password)
+                "password"     => $req->password,
+                "role"      => $req->hak
             ]);
             $status = 1;
             $pesan = "Data berhasil dismpan";

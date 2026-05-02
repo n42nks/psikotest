@@ -39,9 +39,9 @@ class LoginController extends Controller
             $cek = $cek->first();
             session()->put("username",$cek["username"]);
             session()->put("password",$cek["password"]);
-            // session()->put("role",$cek["role"]);
+            session()->put("role",$cek["role"]);
             session()->put("id",$cek["Idadmin"]);
-             session()->put("login",TRUE);
+            session()->put("login",TRUE);
             return redirect('/admin/dashboard');
         }
         else{

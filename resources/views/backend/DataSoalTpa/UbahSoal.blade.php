@@ -20,7 +20,7 @@
                          <input type="hidden" name="id_soal" value="{{$Soal->id_soal}}">
                       </div>
                     </div>
-                   
+
                   </div>
                  <div class="form-group">
                     <label for="exampleInputEmail1">Kategori</label>
@@ -34,7 +34,7 @@
                       @endif
                       @endforeach
                     </select>
-                  </div> 
+                  </div>
 
                  <!--  <div class="form-group">
                    <label for="exampleInputEmail1">Soal</label>
@@ -58,7 +58,7 @@
                         </script>
                       </div>
                     </div>
-                    
+
                   </div>
 
                  <div class="form-group">
@@ -95,11 +95,22 @@
                       </div>
                     </div>
                   </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Jawaban E</label>
+                    <div class="row">
+                      <div class="col-sm-10">
+                        <textarea  type="text" class="form-control" id="E" name="E">{{$Soal->E}}</textarea>
+                        <script>
+                        CKEDITOR.replace( 'E' );
+                        </script>
+                      </div>
+                    </div>
+                  </div>
 
-              
+
                   <div class="form-group">
                     <label for="exampleInputPassword1">Kunci Jawaban</label>
-                  
+
                     <div class="row">
                       <div class="col-sm-2">
                           <input type="text" value="{{$Soal->jawaban}}" class="form-control" id="jawaban" name="jawaban">

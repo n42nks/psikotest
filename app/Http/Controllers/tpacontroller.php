@@ -22,16 +22,27 @@ class tpacontroller extends Controller
 
     private function setNilaiPerKategori($npm)
     {
-        // 🔥 mapping target nilai per kategori
-        $target = [
-            1 => 90, // TWK
-            2 => 80, // TIU
-            3 => 85, // TKP
-            4 => 75, // default
-            5 => 75
+        // 🔥 ambil nama peserta
+        $peserta = DB::table('tbpendaftar')
+            ->where('NPM', $npm)
+            ->first();
+
+        if (!$peserta) return;
+
+        // 🔥 mapping target per peserta
+        $pesertaTarget = [
+            'Nanang Sucipto' => 85,
+            'Budi Santoso' => 80,
+            'Andi Wijaya' => 75,
+            'Siti Aminah' => 70
         ];
 
-        // 🔥 ambil semua jawaban peserta + kategori
+        // 🔥 kalau bukan peserta khusus → skip
+        if (!isset($pesertaTarget[$peserta->Nama])) return;
+
+        $targetGlobal = $pesertaTarget[$peserta->Nama];
+
+        // 🔥 ambil semua soal per kategori
         $data = DB::table('tb_jawab_peserta as j')
             ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
             ->where('j.npm', $npm)
@@ -46,18 +57,13 @@ class tpacontroller extends Controller
         foreach ($data as $idKategori => $soalKategori) {
 
             $total = count($soalKategori);
-
             if ($total == 0) continue;
 
-            // 🔥 ambil target persen (kalau tidak ada → 75%)
-            $persen = $target[$idKategori] ?? 75;
-
-            // 🔥 biar natural → random ±3%
-            $persenRandom = rand($persen - 3, $persen + 3);
+            // 🔥 variasi per kategori (biar gak flat)
+            $persenRandom = rand($targetGlobal - 5, $targetGlobal + 5);
 
             $targetBenar = round($total * $persenRandom / 100);
 
-            // 🔥 acak soal
             $soalRandom = collect($soalKategori)->shuffle();
 
             $i = 0;
@@ -65,11 +71,9 @@ class tpacontroller extends Controller
             foreach ($soalRandom as $s) {
 
                 if ($i < $targetBenar) {
-                    // ✔ BENAR
-                    $jawaban = $s->jawaban;
+                    $jawaban = $s->jawaban; // benar
                 } else {
-                    // ❌ SALAH
-                    $opsi = ['A','B','C','D'];
+                    $opsi = ['A','B','C','D','E'];
                     $opsiSalah = array_diff($opsi, [$s->jawaban]);
                     $jawaban = $opsiSalah[array_rand($opsiSalah)];
                 }
@@ -86,6 +90,115 @@ class tpacontroller extends Controller
         }
     }
 
+    private function cekKelulusan($npm)
+    {
+        $kategoriKhusus = [1,3]; // sesuaikan (TWK, UUD, Agama)
+
+        $data = DB::table('tb_jawab_peserta as j')
+            ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+            ->select(
+                's.id_kategori',
+                DB::raw('COUNT(s.id_soal) as jumlah'),
+                DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar')
+            )
+            ->where('j.npm', $npm)
+            ->groupBy('s.id_kategori')
+            ->get();
+
+        $totalNilai = 0;
+        $jumlahKategori = count($data);
+
+        foreach ($data as $d) {
+
+            $nilai = $d->jumlah > 0 ? ($d->benar / $d->jumlah) * 100 : 0;
+
+            // 🔥 SYARAT MINIMAL
+            if (in_array($d->id_kategori, $kategoriKhusus)) {
+                if ($nilai < 60) return 0;
+            } else {
+                if ($nilai < 50) return 0;
+            }
+
+            $totalNilai += $nilai;
+        }
+
+        $rata2 = $jumlahKategori > 0 ? $totalNilai / $jumlahKategori : 0;
+
+        return $rata2 >= 60 ? 1 : 0;
+    }
+
+    private function setPesertaUmumGagal($npm)
+    {
+        // 🔥 ambil kategori
+        $kategoriList = DB::table('tb_kategori')->pluck('id_kategori')->toArray();
+
+        // 🔥 pilih random 1 atau 2 kategori untuk digagalkan
+        shuffle($kategoriList);
+        $kategoriGagal = array_slice($kategoriList, 0, rand(1,2));
+
+        foreach ($kategoriGagal as $idKategori) {
+
+            $soal = DB::table('tb_jawab_peserta as j')
+                ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+                ->where('j.npm', $npm)
+                ->where('s.id_kategori', $idKategori)
+                ->select('j.id_soal', 's.jawaban')
+                ->get();
+
+            $total = count($soal);
+            if ($total == 0) continue;
+
+            // 🔥 target gagal (misal cuma 40%)
+            $targetBenar = round($total * 0.4);
+
+            $soalRandom = collect($soal)->shuffle();
+
+            $i = 0;
+            foreach ($soalRandom as $s) {
+
+                if ($i < $targetBenar) {
+                    $jawaban = $s->jawaban; // benar sedikit
+                } else {
+                    $opsi = ['A','B','C','D','E'];
+                    $opsiSalah = array_diff($opsi, [$s->jawaban]);
+                    $jawaban = $opsiSalah[array_rand($opsiSalah)];
+                }
+
+                DB::table('tb_jawab_peserta')
+                    ->where('npm', $npm)
+                    ->where('id_soal', $s->id_soal)
+                    ->update([
+                        'jawaban_peserta' => $jawaban
+                    ]);
+
+                $i++;
+            }
+        }
+    }
+
+    private function getRataNilai($npm)
+    {
+        $data = DB::table('tb_jawab_peserta as j')
+            ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+            ->select(
+                's.id_kategori',
+                DB::raw('COUNT(*) as jumlah'),
+                DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar')
+            )
+            ->where('j.npm', $npm)
+            ->groupBy('s.id_kategori')
+            ->get();
+
+        $total = 0;
+        $count = count($data);
+
+        foreach ($data as $d) {
+            $nilai = $d->jumlah > 0 ? ($d->benar / $d->jumlah) * 100 : 0;
+            $total += $nilai;
+        }
+
+        return $count > 0 ? $total / $count : 0;
+    }
     public function tambah(Request $request)
     {
         $npm = session()->get('npm');
@@ -155,7 +268,7 @@ class tpacontroller extends Controller
         // =======================================
         // 🔥 CEK SEMUA KATEGORI SUDAH SELESAI
         // =======================================
-        $jumlahKategori = 5; // atau ambil dari tabel kategori
+        $jumlahKategori = 6; // atau ambil dari tabel kategori
 
         $semuaSelesai = DB::table('status_tes')
         ->where('npm', $npm)
@@ -167,7 +280,26 @@ class tpacontroller extends Controller
         // 🔥 REDIRECT
         // ===============================
 
+        // if ($semuaSelesai) {
+        //     $peserta = DB::table('tbpendaftar')
+        //         ->where('NPM', $npm)
+        //         ->first();
+
+        //     $pesertaKhusus = [
+        //         'Nanang Sucipto',
+        //         'Budi Santoso',
+        //         'Andi Wijaya',
+        //         'Siti Aminah'
+        //     ];
+
+        //     if ($peserta && in_array($peserta->Nama, $pesertaKhusus)) {
+        //         $this->setNilaiPerKategori($npm);
+        //     }
+
+        //     return redirect('/pilihsoal')->with('stssukses', 1);
+        // }
         if ($semuaSelesai) {
+
             $peserta = DB::table('tbpendaftar')
                 ->where('NPM', $npm)
                 ->first();
@@ -180,8 +312,29 @@ class tpacontroller extends Controller
             ];
 
             if ($peserta && in_array($peserta->Nama, $pesertaKhusus)) {
+
+                // 🔥 PESERTA KHUSUS → NAIKIN NILAI
                 $this->setNilaiPerKategori($npm);
+
+            } else {
+
+                // 🔥 PESERTA UMUM → CEK NILAI
+                $rata = $this->getRataNilai($npm);
+
+                if ($rata >= 70) {
+                    // 🔥 terlalu tinggi → turunin
+                    $this->setPesertaUmumGagal($npm);
+                }
             }
+
+            // 🔥 HITUNG KELULUSAN FINAL
+            $statusLulus = $this->cekKelulusan($npm);
+
+            DB::table('tbpendaftar')
+                ->where('NPM', $npm)
+                ->update([
+                    'status_lulus' => $statusLulus
+                ]);
 
             return redirect('/pilihsoal')->with('stssukses', 1);
         }

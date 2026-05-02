@@ -51,7 +51,8 @@ class SoalTpaController extends Controller
             'B' => 'required',
             'C' => 'required',
             'D' => 'required',
-            'jawaban' => 'required|in:A,B,C,D',
+            'E' => 'required',
+            'jawaban' => 'required|in:A,B,C,D,E',
         ], [
             'id_kategori.required' => 'Kategori wajib dipilih',
             'id_kategori.not_in' => 'Kategori harus dipilih',
@@ -60,8 +61,9 @@ class SoalTpaController extends Controller
             'B.required' => 'Jawaban B wajib diisi',
             'C.required' => 'Jawaban C wajib diisi',
             'D.required' => 'Jawaban D wajib diisi',
+            'E.required' => 'Jawaban E wajib diisi',
             'jawaban.required' => 'Kunci jawaban wajib diisi',
-            'jawaban.in' => 'Kunci jawaban harus A/B/C/D',
+            'jawaban.in' => 'Kunci jawaban harus A/B/C/D/E',
         ]);
 
         $data2[] = array(
@@ -72,6 +74,7 @@ class SoalTpaController extends Controller
             'B' => $request->input('B'),
             'C' => $request->input('C'),
             'D' => $request->input('D'),
+            'E' => $request->input('E')
         );
         DB::table('soaltpa') -> insert($data2);
 
@@ -121,6 +124,7 @@ class SoalTpaController extends Controller
         $Soal->B = $request->input('B');
         $Soal->C = $request->input('C');
         $Soal->D = $request->input('D');
+        $Soal->E = $request->input('E');
         $Soal->update();
 
         $select = DB::select('select * from soaltpa');

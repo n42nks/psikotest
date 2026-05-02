@@ -1,234 +1,491 @@
 @extends('frontend/dashboard')
-@section('pendaftar','active')
+@section('pendaftar', 'active')
 @section('css')
-<style type="text/css">
-  @media only screen and (max-width: 468px) {
-    #img-logo {
-      width: 90%;
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            /* 🔥 hilangkan scroll global */
+        }
 
+        /* CARD FULL SCREEN */
+        .box-purple {
+            height: calc(100vh - 90px);
+            /* tinggi layar dikurangi header */
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
 
-    }
-    #tmptbtn
-    {
-        text-align: center;
-    }
+        /* HEADER */
+        .box-header {
+            background: linear-gradient(90deg, #243A6B, #1e2f57);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
 
+        /* BODY FLEX TANPA SCROLL */
+        .box-body {
+            flex: 1;
+            overflow-y: auto;
+            /* ✅ biar bisa scroll */
+            padding: 30px 60px;
+            scroll-behavior: smooth;
+        }
 
+        /* FOOTER */
+        .box-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
 
+        /* SOAL */
+        .soal-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
 
-  }
-  .box-purple {
-    height: 370px;
+        /* OPSI */
+        .opsi {
+            display: flex;
+            /* 🔥 penting */
+            align-items: flex-start;
+            /* 🔥 biar text mulai dari atas */
+            gap: 12px;
 
-        overflow-y: scroll;
-    }
+            border: 1px solid #ddd;
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
 
+            cursor: pointer;
+            transition: 0.2s;
 
-</style>
+            background: white;
+        }
+
+        /* HOVER */
+        .opsi:hover {
+            background: #f8fafc;
+            border-color: #6366f1;
+        }
+
+        /* RADIO */
+        .opsi input {
+            margin-top: 4px;
+            /* 🔥 sejajarkan dengan text */
+            transform: scale(1.2);
+            flex-shrink: 0;
+        }
+
+        /* TEXT DALAM OPSI */
+        .opsi span {
+            flex: 1;
+            white-space: normal;
+            /* 🔥 WAJIB */
+            word-break: break-word;
+            /* 🔥 anti kepotong */
+            line-height: 1.6;
+        }
+
+        /* SELECTED */
+        .opsi.active {
+            background: #eef2ff;
+            border-color: #6366f1;
+        }
+
+        /* TIMER */
+        #timerSoal {
+            font-size: 20px;
+            font-weight: bold;
+            color: #F97316;
+        }
+
+        /* BUTTON */
+        .btn-next {
+            background: linear-gradient(90deg, #F97316, #FB923C);
+            color: white;
+            border-radius: 10px;
+            font-weight: bold;
+            padding: 10px 25px;
+        }
+
+        .header-modern {
+            background: linear-gradient(135deg, #243A6B, #1e2f57);
+            color: white;
+            padding: 20px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .header-modern .title {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .soal-item {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timer-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* BOX TIMER */
+        .timer-box {
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* LABEL */
+        .timer-box .label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* VALUE */
+        .timer-box .value {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* TOTAL (HIJAU) */
+        .timer-box.total {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid #22c55e;
+        }
+
+        .timer-box.total .value {
+            color: #22c55e;
+        }
+
+        /* SOAL (ORANGE) */
+        .timer-box.soal {
+            background: rgba(249, 115, 22, 0.15);
+            border: 1px solid #F97316;
+        }
+
+        .timer-box.soal .value {
+            color: #F97316;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:768px) {
+            .box-body {
+                padding: 20px;
+            }
+        }
+    </style>
 @endsection
-@section('navbar-extra') 
-  @if(session('status_test_selesai'))
-    <li class="user user-menu">
-      <a href="{{ url('/datahasil')}}">Hasil test</a>
-    </li>
-    <li class="user user-menu">
-      <a href="{{ url('/info')}}">Informasi</a>
-    </li>
-  @endif
+@section('atas')
+    <header class="main-header">
+
+        <!-- LOGO -->
+        <a href="#" class="logo" style="background:#243A6B; border-right:1px solid rgba(255,255,255,0.1);">
+
+            <!-- MINI -->
+            {{-- <span class="logo">
+                <img src="{{ asset('img/asia-putih.png') }}" width="50">
+            </span> --}}
+
+            <!-- FULL -->
+            <span class="logo-lg">
+                <img src="{{ asset('img/asia-putih.png') }}" height="50">
+                <span style="color:white; font-size:13px; font-weight:bold;">
+                    Sistem CAT
+                </span>
+            </span>
+        </a>
+
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-static-top" style="background:#243A6B; border:none; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+
+            <!-- RIGHT MENU -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    @yield('navbar-extra')
+
+                    <!-- USER -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+
+                            <img src="{{ asset('img/logo_tok1.png') }}" class="user-image"
+                                style="border-radius:50%; border:2px solid #F97316;">
+
+                            <span class="hidden-xs" style="color:white;">
+                                {{ session()->get('nama') }}
+                            </span>
+                        </a>
+
+                        <!-- DROPDOWN -->
+                        <ul class="dropdown-menu">
+
+                            <li class="user-header" style="background:#243A6B;">
+                                <img src="{{ asset('img/logo_tok1.png') }}" class="img-circle" alt="User Image">
+
+                                <p>
+                                    Sistem CAT<br>
+                                    <small>Seleksi Perangkat Desa</small>
+                                </p>
+                            </li>
+
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">Profil</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{{ url('/logout') }}" class="btn btn-danger btn-flat">
+                                        Logout
+                                    </a>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+
+        </nav>
+    </header>
 @endsection
+
 @section('content')
+    <form id="yesform" action="{{ url('/storetpa') }}" method="POST">
+        @csrf
+        <input type="hidden" name="waktu_habis" id="waktu_habis" value="0">
+        <div class="box box-purple">
 
-<div class="container" style="margin-top: 20px">
-   <div class="col-md-12">
-      <center><h3><span style="font-family: arial;text-align: center;" id="timer"></span></h3></center>
-    </div>
+            <!-- HEADER -->
+            <div class="box-header header-modern">
+                <h4 class="title">Tes Pengetahuan Komputer / Teknologi Informasi</h4>
 
-<form id="yesform" action="" method="post">
+                <div class="timer-wrapper">
 
+                    <!-- TOTAL -->
+                    <div class="timer-box total">
+                        <div class="label">⏱ Total Waktu</div>
+                        <div id="timerTotal" class="value"></div>
+                    </div>
 
-    @csrf()
-    <div class="box box-purple">
-        <ol class="breadcrumb">
-          <li>Test Online</li>
-          <li class="active">Daya Nalar</li>
-          <!-- <li>Pilihlah jawaban pilihan ganda sesuai dengan kepribadian Anda</li> -->
-        </ol>
+                    <!-- SOAL -->
+                    <div class="timer-box soal">
+                        <div class="label">⚡ Waktu Soal</div>
+                        <div id="timerSoal" class="value"></div>
+                    </div>
 
-        <div class="box-header with-border">
-          <div class="col-md-12">
-            <h2 class="text-center mt-0">Daya Nalar</h2>
-              <div class="callout callout-default">
-              <h4 class="text-justify">Pada Test ini diuji Hitunglah Jumlah huruf "p" pada sederetan huruf yang ada. </h4>              
-              </div>
+                </div>
+            </div>
 
-          </div>
+            <!-- BODY -->
+            <div class="box-body">
+
+                <div id="soal-container">
+
+                    @foreach ($tpa as $index => $item)
+                        <div class="soal-item" data-index="{{ $index }}" style="display:none;">
+                            <input type="hidden" name="{{ 'ferin' . $item->id_soal }}" value="{{ $item->id_soal }}">
+                            <input type="hidden" name="id_kat" value="{{ $item->id_kategori }}">
+                            <h4 style="margin-bottom:10px;">
+                                Soal No. <b>{{ $index + 1 }}</b>
+                            </h4>
+
+                            <div class="soal-text">
+                                {!! $item->soal !!}
+                            </div>
+
+                            @php $opsi = ['A','B','C','D','E']; @endphp
+
+                            @foreach ($opsi as $o)
+                                <label class="opsi">
+                                    <input type="radio" name="pilihan{{ $item->id_soal }}" value="{{ $o }}">
+                                    <span>{!! $item->$o !!}</span>
+                                </label>
+                            @endforeach
+
+                        </div>
+                    @endforeach
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="box-footer text-center">
+                <button type="button" class="btn btn-next" id="nextBtn">
+                    Selanjutnya
+                </button>
+            </div>
 
         </div>
-        <div class="box-body">
-          <?php $no=1;?>
-          @foreach ($arit as $item)
-          <div class="col-md-12">
-            <div class="alert bg-purple color-palette alert-dismissible">
-              <h4> Soal Nomor <span id="no">{{ $no++ }}</span></h4>
-            </div>
-          </div>
-          
-          <h3 class="box-title" style="margin-left: 20px; font-family: arial; font-size:16px;">{!! $item->soal !!}</h3>
-          
-          <div class="row" id="pnlSoal">
-            <input type="hidden" name="{{ 'ferin'.$item->id_soal }}" value="{{ $item->id_soal }}">
-            
-            @php $tpa1 = ['A', 'B', 'C', 'D']; @endphp
-            @foreach($tpa1 as $acak)
-              <div class="col-md-12">
-                <div style="margin-left: 20px;">
-                  <label style="display: flex; align-items: center; font-size: 18px; padding: 6px 0;">
-                    <input 
-                      type="radio" 
-                      name="{{ 'pilihan'.$item->id_soal }}" 
-                      id="{{ $acak }}" 
-                      value="{{ $acak }}" 
-                      style="margin: 0 10px 0 0; transform: scale(1.2); display: inline-block; vertical-align: middle;"
-                    >
-                    <span style="display: inline-block; line-height: 1.2; vertical-align: middle; position: relative; top: 5px;">
-                      {!! $item->$acak !!}
-                    </span>
-                  </label>
-
-                </div>
-              </div>
-            @endforeach
-          </div>
-          @endforeach
-        </div>
-        <div class="box-footer" style="text-align: center">
-            <div class="row">
-                <div class="col-md-4">
-
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-yesno"><h4>SIMPAN</h4></button>
-
-                </div>
-                <div class="col-md-4">
-
-                </div>
-            </div>
-
-         </div>
-          </div>
-
-
-
-</div>
-
-          <div class="modal fade" id="modal-yesno">
-            <div class="modal-dialog" style="text-align: center">
-              <div class="modal-content" style="width: 80%">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title"><i class="icon fa fa-bullhorn"></i> Konfirmasi</h4>
-                </div>
-                <div class="modal-body" >
-                  Apakah Anda Sudah Yakin ?
-                </div>
-                <div class="modal-footer" style="text-align: center">
-
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                  <button type="submit" class="btn btn-primary" id="yes">Yes</button>
-
-                </div>
-              </div>
-              <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-          </div>
-        </form>
-
-
-
-
-
-<div class="modal fade" id="modal-default">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"><i class="icon fa fa-bullhorn"></i> Harap Diperhatikan</h4>
-      </div>
-      <div class="modal-body">
-        <p>1. Scroll kebawah Untuk Melihat soal Selanjutnya</p><br>
-        <p>2. Pastikan Kalian menjawab semuanya sebelum di klik tombol <b>SIMPAN</b></p><br>
-        <p>3. Ketika Klik Mulai Maka Waktu Akan Akan Berjalan</p><br>
-        <p>4.<b style="color: red">JANGAN SAMPAI KEHABISAN WAKTU</p></b>
-        <p>5. Selamat Mengerjakan & Jangan Lupa Berdoa</p>
-      </div>
-      <div class="modal-footer" style="text-align: center">
-
-        <button type="button" class="btn btn-primary" id="mulai">Klik Mulai </button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-
-
-
+    </form>
 @endsection
 
 @section('script')
-<script>
-$(document).ready(function() {
-  $('#modal-default').modal({backdrop:'static',keyboard:false});
-  $('#modal-default').modal('show');
-  var menit = "{{session('menit')}}";
-    var detik = "{{session('detik')}}";
-    document.getElementById('timer').innerHTML = menit + ":" + detik;
+    <script>
+        $(document).ready(function() {
 
-    $('input[type="radio"].radio1').iCheck({radioClass   : 'iradio_flat-blue'})
+            let soal = $('.soal-item');
+            let totalSoal = soal.length;
 
-    $('#mulai').click(function() {
-      $('#modal-default').modal('hide');
-       startTimer();
-    });
+            let totalMenit = {{ session('menit') }};
+            let totalDetik = {{ session('detik') }};
 
-    $('#yes').click(function() {
+            let totalWaktu = (totalMenit * 60) + totalDetik;
+            let waktuPerSoal = Math.floor(totalWaktu / totalSoal);
 
-      $('#yesform').attr('action', "{{url('/storetpa')}}");
-    });
+            let totalSisa = localStorage.getItem('totalSisa') ?
+                parseInt(localStorage.getItem('totalSisa')) :
+                totalWaktu;
 
-});
-function startTimer()
-  {
+            // 🔥 AMBIL DARI STORAGE
+            let current = localStorage.getItem('currentSoal') ? parseInt(localStorage.getItem('currentSoal')) : 0;
+            let sisa = localStorage.getItem('sisaWaktu') ? parseInt(localStorage.getItem('sisaWaktu')) :
+                waktuPerSoal;
 
-    var presentTime = document.getElementById('timer').innerHTML;
-      var timeArray = presentTime.split(/[:]+/);
-      var m = timeArray[0];
-      var s = checkSecond((timeArray[1] - 1));
-      if(s==59){
-        m=m-1
-      }
-      $.get("{{url('/setsession')}}"+"/"+m+"/"+s);
-      if(m<0){
-        window.location = "{{url('/logout')}}";
-      }
-      else {
+            let timer;
 
-          document.getElementById('timer').innerHTML = m + ":" + s;
-          setTimeout(startTimer, 1000);
-      }
+            tampilSoal(current);
+            startTimer();
+            startTotalTimer();
 
-  }
-  function checkSecond(sec) {
-      if (sec < 10 && sec >= 0) {sec = "0" + sec};
-      if (sec < 0) {sec = "59"};
-      return sec;
+            function startTotalTimer() {
 
-  }
+                setInterval(function() {
 
-</script>
+                    let m = Math.floor(totalSisa / 60);
+                    let s = totalSisa % 60;
+
+                    $('#timerTotal').html(
+                        m + ":" + (s < 10 ? '0' : '') + s
+                    );
+
+                    localStorage.setItem('totalSisa', totalSisa);
+
+                    totalSisa--;
+
+                    if (totalSisa < 0) {
+                        localStorage.clear();
+                        $('#yesform').submit();
+                    }
+
+                }, 1000);
+            }
+
+            function updateButton() {
+                if (current === totalSoal - 1) {
+                    $('#nextBtn').text('Simpan');
+                } else {
+                    $('#nextBtn').text('Selanjutnya');
+                }
+            }
+
+            function tampilSoal(index) {
+                soal.hide();
+                $(soal[index]).fadeIn(200);
+
+                updateButton(); // 🔥 penting
+            }
+
+            function startTimer() {
+
+                timer = setInterval(function() {
+
+                    let m = Math.floor(sisa / 60);
+                    let s = sisa % 60;
+
+                    $('#timerSoal').html(m + ":" + (s < 10 ? '0' : '') + s);
+
+                    // 🔥 SIMPAN STATE
+                    localStorage.setItem('currentSoal', current);
+                    localStorage.setItem('sisaWaktu', sisa);
+
+                    sisa--;
+
+                    if (sisa < 0) {
+                        clearInterval(timer);
+                        nextSoal();
+                    }
+
+                }, 1000);
+            }
+
+            function nextSoal() {
+
+                clearInterval(timer);
+
+                current++;
+                sisa = waktuPerSoal;
+
+                if (current >= totalSoal) {
+                    localStorage.removeItem('totalSisa');
+                    localStorage.clear(); // reset setelah selesai
+                    setTimeout(function() {
+                        $('#yesform').submit();
+                    }, 200); // kasih jeda sedikit
+                } else {
+                    tampilSoal(current);
+                    startTimer();
+                }
+            }
+
+            $('#nextBtn').click(function() {
+
+                if (current === totalSoal - 1) {
+                    // 🔥 kalau soal terakhir → submit
+                    localStorage.clear();
+                    localStorage.removeItem('totalSisa');
+                    setTimeout(function() {
+                        $('#yesform').submit();
+                    }, 200); // kasih jeda sedikit
+                } else {
+                    nextSoal();
+                }
+
+            });
+
+            if (totalSisa < 60) {
+                $('#timerTotal').parent().css({
+                    background: '#fee2e2',
+                    border: '1px solid red'
+                });
+            }
+            if (totalSisa < 0) {
+
+                $('#waktu_habis').val(1); // 🔥 tandai waktu habis
+
+                $('#yesform').submit();
+            }
+            // 🔥 SIMPAN JAWABAN
+            $('input[type=radio]').on('change', function() {
+                let name = $(this).attr('name');
+                let val = $(this).val();
+                localStorage.setItem(name, val);
+            });
+
+            // 🔥 LOAD JAWABAN
+            $('input[type=radio]').each(function() {
+                let name = $(this).attr('name');
+                let saved = localStorage.getItem(name);
+
+                if (saved && $(this).val() === saved) {
+                    $(this).prop('checked', true);
+                    $(this).closest('.opsi').addClass('active');
+                }
+            });
+
+        });
+    </script>
 @endsection

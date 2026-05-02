@@ -279,7 +279,7 @@
 
             <!-- HEADER -->
             <div class="box-header header-modern">
-                <h4 class="title">Tes Pengetahuan Pemrintah Desa</h4>
+                <h4 class="title">Tes Pengetahuan Umum</h4>
 
                 <div class="timer-wrapper">
 
@@ -315,7 +315,7 @@
                                 {!! $item->soal !!}
                             </div>
 
-                            @php $opsi = ['A','B','C','D']; @endphp
+                            @php $opsi = ['A','B','C','D','E']; @endphp
 
                             @foreach ($opsi as $o)
                                 <label class="opsi">

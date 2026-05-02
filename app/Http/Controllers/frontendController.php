@@ -363,40 +363,18 @@ class frontendController extends Controller
   public function konfirmasinalar($idkat)
   {
     $waktu = waktu::where("Id",$idkat)->first();
-    session()->put("menit", $waktu->waktu);
-    session()->put("detik", "00");
-    $npm = session()->get('npm');
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
 
-    $data = tbpendaftar::where("NPM", $npm)->get();
-    $tpa = TbJawabPeserta::where("npm",$npm)->get();
-    $bing = DB::table('soaltpa')
-                ->join('tb_jawab_peserta','soaltpa.id_soal','=','tb_jawab_peserta.id_soal')
-                ->where('tb_jawab_peserta.npm','=',$npm)->where('soaltpa.id_kategori',$idkat)
-                ->get();
+        if (TbJawabPeserta::where('npm', Session()->get('npm'))
+                ->where('id_kategori', $idkat)
+                ->exists()) {
 
-    if ($data->count() > 0) {
-      $data = $data->first();
-          if ($bing->count() > 0) {
+            return view('frontend.tpa.selesai');
 
-            $bing = $bing->first();
-            if ($data->NPM == $bing->npm) {
-              return redirect('/selesai');
-            }
-          }
-
-         if ($tpa->count() > 0)
-            {
-                return view('frontend/konfirmnalar');
-
-            }
-            else {
-
-                  return redirect('/pilihsoal')->with(["ststpa" => 1]);
-            }
-
-      }
-
-    return view('frontend/konfirmnalar');
+        } else {
+            return view('frontend.konfirmnalar');
+        }
   }
   public function konfirmasimekanis($idkat)
   {

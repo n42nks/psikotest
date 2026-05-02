@@ -1,94 +1,200 @@
 @extends('frontend/dashboard')
-@section('pendaftar','active')
+@section('pendaftar', 'active')
+
+@section('css')
+    <style>
+        /* PROFILE CARD */
+        .card-profile-modern {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .avatar {
+            width: 90px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .name {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .info div {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info span {
+            color: #64748b;
+        }
+
+        .btn-logout {
+            margin-top: 20px;
+            display: block;
+            padding: 10px;
+            background: #ef4444;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        /* INSTRUCTION CARD */
+        .card-instruction {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-instruction {
+            background: linear-gradient(135deg, #243A6B, #1e2f57);
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .body-instruction {
+            padding: 25px;
+        }
+
+        /* RULE */
+        .rule {
+            padding: 12px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            margin-bottom: 10px;
+        }
+
+        .rule.warning {
+            background: #fef3c7;
+        }
+
+        /* FINAL WARNING */
+        .final-warning {
+            text-align: center;
+            margin: 20px 0;
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* BUTTON */
+        .btn-start {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+            color: white;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+            transition: 0.3s;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+@endsection
 
 @section('content')
 
-  <div class="container">
-  <div class="row" style="margin-top: 20px;">
-       <div class="col-md-5">
+<div class="container" style="margin-top:30px;">
 
-          <!-- Profile Image -->
-          <div class="box box-primary">
-            <div class="box-body box-profile">
-              <img class="profile-user-img img-responsive img-circle" src="{{asset('img/icon.png')}}" alt="User profile picture">
+    <div class="row">
 
-              <h3 class="profile-username text-center">{{Session()->get('nama')}}</h3>
+        <!-- PROFILE -->
+        <div class="col-md-4">
+            <div class="card-profile-modern text-center">
 
-              
-              <ul class="list-group list-group-unbordered">
-                <li class="list-group-item">
-                  <b>No Peserta&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;: {{Session()->get('npm')}}</b>
-                </li>
-                <li class="list-group-item">
-                  <b>Tanggal Lahir  : {{Session()->get('tgl')}}</b>
-                </li>
-                <li class="list-group-item">
-                  <b>Kota&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{Session()->get('tmp')}}</b>
-                </li>
+                <img src="{{ asset('img/icon.png') }}" class="avatar">
 
-              </ul>
+                <h3 class="name">{{ session()->get('nama') }}</h3>
 
-              <a href="{{url('/logout')}}" class="btn btn-danger btn-block"><b>Logout</b></a>
+                <div class="info">
+                    <div><span>No Peserta</span><b>{{ session()->get('npm') }}</b></div>
+                    <div><span>Tanggal Lahir</span><b>{{ session()->get('tgl') }}</b></div>
+                    <div><span>Alamat</span><b>{{ session()->get('tmp') }}</b></div>
+                </div>
+
+                <a href="{{ url('/logout') }}" class="btn-logout">
+                    Logout
+                </a>
+
             </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-          <!-- /.box -->
         </div>
-         <div class="col-md-7">
 
-          <!-- Profile Image -->
-          <div class="box box-primary">
-              <div class="box-body">
-                 <div class="alert alert-danger alert-dismissible" style="font-family:'arial';font-size:20px;">
-                <h4><i class="icon fa fa-bullhorn"></i> Harap Diperhatikan!</h4>
-                Berikut adalah petunjuk soal yang harus anda cermati sebelum mengerjakan soal
-              </div>
-              <div class="callout callout-default" style="margin-left: 10px;">
-                <h4 style="font-family:'arial';font-size:20px;">Waktu kalian mengerjakan adalah 4 menit.</h4>
-              </div>
-              <div class="callout callout-default" style="margin-left: 10px;">
-                <h4 style="font-family:'arial';font-size:20px;">Jumlah soal terdapat 10 soal yang harus dikerjakan.Terdapat 4 pilihan jawaban setiap soalnya</h4>
-              </div>              
-              <div class="callout callout-default" style="margin-left: 10px;">
-                <h4 style="font-family:'arial';font-size:20px;">Anda tidak dapat mengulangi soal yang terlewat. pastikan kalian menjawab dengan yakin</h4>
-              </div>
-              <div class="callout callout-default" style="margin-left: 10px;text-align:center;">
-                <b> <h3 style="color:red;font-family:'arial';font-size:20px;">ANDA HARUS JUJUR DENGAN DIRI ANDA SENDIRI !!</h3></b>
-              </div>
+        <!-- INSTRUKSI -->
+        <div class="col-md-8">
+            <div class="card-instruction">
 
-                <a href="{{url('/mekanis/7')}}"><button class="btn btn-primary btn-block" sty><h4>Kerjakan Sekarang</h4></button></a>
+                <!-- HEADER -->
+                <div class="header-instruction">
+                    ⚠️ Petunjuk Pengerjaan
+                </div>
 
-              </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-          <!-- /.box -->
+                <!-- BODY -->
+                <div class="body-instruction">
+
+                    <div class="rule">
+                        ⏱ Waktu pengerjaan: <b>25 Menit</b>
+                    </div>
+
+                    <div class="rule">
+                        📄 Jumlah soal: <b>20 soal</b> (pilihan ganda)
+                    </div>
+
+                    <div class="rule">
+                        🚫 Tidak bisa kembali ke soal sebelumnya
+                    </div>
+
+                    <div class="rule warning">
+                        ⚡ Jawablah dengan yakin dan teliti
+                    </div>
+
+                    <div class="final-warning">
+                        ANDA HARUS JUJUR DENGAN DIRI ANDA SENDIRI
+                    </div>
+
+                    <!-- BUTTON -->
+                    <a href="{{ url('/konsen/5') }}" class="btn-start">
+                        🚀 Kerjakan Sekarang
+                    </a>
+
+                </div>
+
+            </div>
         </div>
-      </div>
-  </div>
 
+    </div>
+
+</div>
 @endsection
 
 @section('script')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-  $(document).ready(function(){
+            var stslogin = "{{ session()->get('stslogin') }}";
 
-    var stslogin = "{{session()->get('stslogin')}}";
+            if (stslogin == 1) {
+                swal(
+                    'Selamat Datang Dalam Tes Online',
+                    'Good Job',
+                    'success'
+                );
+            }
 
-    if (stslogin == 1) {
-      swal(
-      'Selamat Datang Dalam Tes Online',
-      'Good Job',
-      'success'
-        );
-    }
-
-  });
-
-</script>
+        });
+    </script>
 
 @endsection
