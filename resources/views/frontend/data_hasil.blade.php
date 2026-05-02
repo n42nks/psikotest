@@ -150,7 +150,6 @@
                             <th>Benar</th>
                             <th>Salah</th>
                             <th>Nilai</th>
-                            <th>Status</th>
                         </tr>
 
                         @php
@@ -171,15 +170,15 @@
                                 <td style="color:green; font-weight:bold;">{{ $hasil->hasil }}</td>
                                 <td style="color:red; font-weight:bold;">{{ $hasil->salah }}</td>
                                 @php
-                                    $nilai = $hasil->jumlah > 0 ? round(($hasil->hasil / $hasil->jumlah) * 100,2) : 0;
+                                    // $nilai = $hasil->jumlah > 0 ? round(($hasil->hasil / $hasil->jumlah) * 100,2) : 0;
+                                    $skor = $hasil->hasil * 2; // benar × 2
+                                    $max_skor = $hasil->jumlah * 2; // total soal × 2
+
+                                    $nilai = $max_skor > 0 ? round(($skor / $max_skor) * 100) : 0;
                                 @endphp
-                                <td>{{ $nilai }}</td>
                                 <td>
-                                @if ($nilai >= 70)
-                                    ✅ LULUS
-                                @else
-                                    ❌ TIDAK LULUS
-                                @endif
+                                    {{ $nilai }} <br>
+                                    <small>{{ $skor }} / {{ $max_skor }}</small>
                                 </td>
 
                             </tr>
@@ -205,7 +204,7 @@
                         Salah<br><b>{{ $total_salah }}</b>
                     </div>
                     @php
-                        $total_nilai = $total_soal > 0 ? round(($total_benar / $total_soal) * 100,2) : 0;
+                        $total_nilai = $total_soal > 0 ? round(($total_benar / $total_soal) * 100, 2) : 0;
                     @endphp
 
                     <div

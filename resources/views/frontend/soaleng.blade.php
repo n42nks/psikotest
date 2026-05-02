@@ -307,6 +307,7 @@
                         <div class="soal-item" data-index="{{ $index }}" style="display:none;">
                             <input type="hidden" name="{{ 'ferin' . $item->id_soal }}" value="{{ $item->id_soal }}">
                             <input type="hidden" name="id_kat" value="{{ $item->id_kategori }}">
+                            <input type="hidden" name="npm" value="{{ session('npm') }}">
                             <h4 style="margin-bottom:10px;">
                                 Soal No. <b>{{ $index + 1 }}</b>
                             </h4>

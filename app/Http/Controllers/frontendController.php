@@ -157,7 +157,7 @@ class frontendController extends Controller
 
     $statusTestSelesai = DB::table('tb_jawab_peserta')
                         ->where('npm', session('npm'))
-                        ->count() >= 5; // contoh: sudah jawab semua 20 soal
+                        ->count() >= 6; // contoh: sudah jawab semua 20 soal
 
     if ($data->count() > 0) {
       $data = $data->first();

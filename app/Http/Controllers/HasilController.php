@@ -80,27 +80,41 @@ class HasilController extends Controller
 
         // 🔥 HASIL PER KATEGORI (URUTKAN!)
         $hasilPerKategori = DB::table('tb_jawab_peserta as j')
-            ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
-            ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
-            ->select(
-                'k.id_kategori',
-                'k.kategori',
-                DB::raw('COUNT(s.id_soal) as jumlah'),
-                DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar'),
-                DB::raw('SUM(CASE WHEN j.jawaban_peserta != s.jawaban THEN 1 ELSE 0 END) as salah')
-            )
-            ->where('j.npm', $npm)
-            ->groupBy('k.id_kategori', 'k.kategori')
-            ->orderBy('k.id_kategori', 'ASC') // 🔥 penting!
-            ->get();
+        ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+        ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
+        ->select(
+            'k.id_kategori',
+            'k.kategori',
+            DB::raw('COUNT(s.id_soal) as jumlah'),
 
+            // ✔ benar
+            DB::raw('SUM(CASE
+                WHEN j.jawaban_peserta = s.jawaban
+                THEN 1 ELSE 0 END) as benar'),
+
+            // ❌ salah (termasuk NULL)
+            DB::raw('SUM(CASE
+                WHEN COALESCE(j.jawaban_peserta, "") != s.jawaban
+                THEN 1 ELSE 0 END) as salah'),
+
+            // 🔥 skor (2 poin kalau benar)
+            DB::raw('SUM(CASE
+                WHEN j.jawaban_peserta = s.jawaban
+                THEN 2 ELSE 0 END) as skor')
+        )
+        ->where('j.npm', $npm)
+        ->groupBy('k.id_kategori', 'k.kategori')
+        ->orderBy('k.id_kategori', 'ASC')
+        ->get();
         // 🔥 HITUNG TOTAL
         $totalBenar = $hasilPerKategori->sum('benar');
         $totalSalah = $hasilPerKategori->sum('salah');
         $totalSoal  = $hasilPerKategori->sum('jumlah');
 
-        // 🔥 NILAI (0 - 100)
-        $nilai = $totalSoal > 0 ? round(($totalBenar / $totalSoal) * 100, 2) : 0;
+        $totalSkor = $hasilPerKategori->sum('skor');
+        $maxSkor   = $totalSoal * 2;
+
+        $nilai = $maxSkor > 0 ? round(($totalSkor / $maxSkor) * 100) : 0;
 
         // 🔥 RENDER HTML
         $html = view('backend.partials.hasil_npm', compact(

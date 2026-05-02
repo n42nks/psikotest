@@ -38,27 +38,41 @@
                         <th>Nilai</th>
                         <th>Status</th>
                     </tr>
-
+                    @php
+                        $adaGagal = false;
+                    @endphp
                     @foreach ($hasilPerKategori as $h)
                         @php
-                            $nilaiKategori = $h->jumlah > 0 ? round(($h->benar / $h->jumlah) * 100, 2) : 0;
+                            $nilaiKategori = $h->benar * 2;
+
+                            $kategoriKhusus = [1, 3];
+                            $min = in_array($h->id_kategori, $kategoriKhusus) ? 60 : 50;
+
+                            $lulus = $nilaiKategori >= $min;
+
+                            if (!$lulus) {
+                                $adaGagal = true;
+                            }
                         @endphp
-                        <tr>
+
+                        <tr style="{{ !$lulus ? 'background:#ffe5e5;' : '' }}">
                             <td style="text-align: left;">{{ $h->kategori }}</td>
                             <td>{{ $h->jumlah }}</td>
                             <td style="color:green; font-weight:bold;">{{ $h->benar }}</td>
                             <td style="color:red; font-weight:bold;">{{ $h->salah }}</td>
-                            <td><b>{{ $nilaiKategori }}</b></td>
+                            <td><b>{{ $nilaiKategori }}
+                                </b>(
+                                <small>{{ round(($h->benar / $h->jumlah) * 100) }}%</small> )
+                            </td>
                             <td>
-                                @if ($nilaiKategori >= 70)
-                                    ✅ LULUS
+                                @if ($lulus)
+                                    <span style="color:green; font-weight:bold;">✅ LULUS</span>
                                 @else
-                                    ❌ TIDAK LULUS
+                                    <span style="color:red; font-weight:bold;">❌ TIDAK LULUS</span>
                                 @endif
                             </td>
                         </tr>
                     @endforeach
-
                 </table>
             </div>
         </div>
@@ -103,15 +117,28 @@
                 </div>
 
                 <div style="margin-top:20px;">
-                    @if ($nilai >= 70)
-                        <div class="alert alert-success text-center" style="font-size:16px; font-weight:bold;">
-                            ✅ LULUS
-                        </div>
-                    @else
-                        <div class="alert alert-danger text-center" style="font-size:16px; font-weight:bold;">
-                            ❌ TIDAK LULUS
+                    @if ($adaGagal)
+                        <div class="alert alert-warning text-center" style="margin-top:15px;">
+                            ⚠ Ada kategori yang tidak memenuhi nilai minimum
                         </div>
                     @endif
+
+                    <!-- 🔥 STATUS AKHIR -->
+                    @php
+                        $lulusAkhir = $nilai >= 60 && !$adaGagal;
+                    @endphp
+
+                    <div style="margin-top:15px;">
+                        @if ($lulusAkhir)
+                            <div class="alert alert-success text-center">
+                                ✅ LULUS
+                            </div>
+                        @else
+                            <div class="alert alert-danger text-center">
+                                ❌ TIDAK LULUS
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
