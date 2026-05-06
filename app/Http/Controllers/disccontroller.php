@@ -90,14 +90,13 @@ class disccontroller extends Controller
     }
     public function nalar($idkat)
     {
-         $arit1 = DB::table("soaltpa")
+        $tpa = DB::table("soaltpa")
                 ->join("tb_kategori","soaltpa.id_kategori",'=',"tb_kategori.id_kategori" )
                 ->where('soaltpa.id_kategori',$idkat)->get();
-
-        return view('frontend/soalnalar',[
-            'arit' => $arit1,
-        ]);
-
+        $waktu = waktu::where("Id",$idkat)->first();
+        session()->put("menit", $waktu->waktu);
+        session()->put("detik", "00");
+        return view('frontend.soalnalar',['tpa' =>$tpa]);
     }
     public function mekanis($idkat)
     {

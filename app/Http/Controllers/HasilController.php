@@ -161,8 +161,14 @@ class HasilController extends Controller
                 ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
                 ->select(
                     DB::raw('COUNT(s.id_soal) as jumlah'),
-                    DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar'),
-                    DB::raw('SUM(CASE WHEN j.jawaban_peserta != s.jawaban THEN 1 ELSE 0 END) as salah')
+
+                    DB::raw('SUM(CASE
+                        WHEN j.jawaban_peserta = s.jawaban
+                        THEN 1 ELSE 0 END) as benar'),
+
+                    DB::raw('SUM(CASE
+                        WHEN COALESCE(j.jawaban_peserta, "") != s.jawaban
+                        THEN 1 ELSE 0 END) as salah')
                 )
                 ->where('j.npm', $p->NPM)
                 ->first();
@@ -171,7 +177,39 @@ class HasilController extends Controller
             $benar = $hasil->benar ?? 0;
             $salah = $hasil->salah ?? 0;
 
-            $nilai = $totalSoal > 0 ? round(($benar / $totalSoal) * 100, 2) : 0;
+            $nilai = $totalSoal > 0
+                ? round(($benar / $totalSoal) * 100, 2)
+                : 0;
+
+            $hasilKategori = DB::table('tb_jawab_peserta as j')
+                ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+                ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
+                ->select(
+                    'k.id_kategori',
+                    DB::raw('COUNT(s.id_soal) as jumlah'),
+                    DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar')
+                )
+                ->where('j.npm', $p->NPM)
+                ->groupBy('k.id_kategori')
+                ->get();
+
+            $adaGagal = false;
+
+            foreach ($hasilKategori as $h) {
+
+                $nilaiKategori = $h->jumlah > 0
+                    ? round(($h->benar / $h->jumlah) * 100)
+                    : 0;
+
+                // 🔥 kategori khusus (Pancasila, dll)
+                $kategoriKhusus = [1, 3];
+                $min = in_array($h->id_kategori, $kategoriKhusus) ? 60 : 50;
+
+                if ($nilaiKategori < $min) {
+                    $adaGagal = true;
+                    break;
+                }
+            }
 
             $data[] = [
                 'npm' => $p->NPM,
@@ -179,11 +217,11 @@ class HasilController extends Controller
                 'total' => $totalSoal,
                 'benar' => $benar,
                 'salah' => $salah,
-                'nilai' => $nilai
+                'nilai' => $nilai,
+                'ada_gagal' => $adaGagal
             ];
         }
 
-        // kirim ke view partial
         $html = view('backend.partials.hasil_semua', compact('data'))->render();
 
         return response()->json([

@@ -425,33 +425,122 @@ class frontendController extends Controller
 //       return view('frontend/data_hasil',  $return);
 //   }
 
-  public function Halhasil(Request $request)
+    // public function Halhasil(Request $request)
+    // {
+    //     $npm = session()->get('npm');
+
+    //     $peserta = DB::table('tbpendaftar')->where('npm', $npm)->first();
+
+    //     $hasilPerKategori = DB::table('tb_jawab_peserta as j')
+    //     ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+    //     ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
+    //     ->select(
+    //         'k.id_kategori',
+    //         'k.kategori as kategori',
+    //         DB::raw('COUNT(s.id_soal) as jumlah'),
+    //         DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as hasil'),
+    //         DB::raw('SUM(CASE WHEN j.jawaban_peserta != s.jawaban THEN 1 ELSE 0 END) as salah')
+    //     )
+    //     ->where('j.npm', $npm)
+    //     ->groupBy('k.id_kategori', 'k.kategori') // 🔥 wajib
+    //     ->orderBy('k.id_kategori', 'ASC') // 🔥 ini yang kamu mau
+    //     ->get();
+
+    //     return view('frontend.data_hasil', [
+    //         'npm' => $npm,
+    //         'nama' => $peserta->Nama ?? '-',
+    //         'alamat' => $peserta->Alamat ?? '-',
+    //         'telp' => $peserta->Telp ?? '-',
+    //         'hasilPerKategori' => $hasilPerKategori
+    //     ]);
+    // }
+
+    public function Halhasil(Request $request)
     {
         $npm = session()->get('npm');
 
-        $peserta = DB::table('tbpendaftar')->where('npm', $npm)->first();
+        $peserta = DB::table('tbpendaftar')->where('NPM', $npm)->first();
 
         $hasilPerKategori = DB::table('tb_jawab_peserta as j')
-        ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
-        ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
-        ->select(
-            'k.id_kategori',
-            'k.kategori as kategori',
-            DB::raw('COUNT(s.id_soal) as jumlah'),
-            DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as hasil'),
-            DB::raw('SUM(CASE WHEN j.jawaban_peserta != s.jawaban THEN 1 ELSE 0 END) as salah')
-        )
-        ->where('j.npm', $npm)
-        ->groupBy('k.id_kategori', 'k.kategori') // 🔥 wajib
-        ->orderBy('k.id_kategori', 'ASC') // 🔥 ini yang kamu mau
-        ->get();
+            ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
+            ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
+            ->select(
+                'k.id_kategori',
+                'k.kategori',
+
+                DB::raw('COUNT(s.id_soal) as jumlah'),
+
+                // ✔ benar
+                DB::raw('SUM(CASE
+                    WHEN j.jawaban_peserta = s.jawaban
+                    THEN 1 ELSE 0 END) as benar'),
+
+                // ❌ salah (termasuk NULL)
+                DB::raw('SUM(CASE
+                    WHEN COALESCE(j.jawaban_peserta, "") != s.jawaban
+                    THEN 1 ELSE 0 END) as salah'),
+
+                // 🔥 skor (2 poin)
+                DB::raw('SUM(CASE
+                    WHEN j.jawaban_peserta = s.jawaban
+                    THEN 2 ELSE 0 END) as skor')
+            )
+            ->where('j.npm', $npm)
+            ->groupBy('k.id_kategori', 'k.kategori')
+            ->orderBy('k.id_kategori', 'ASC')
+            ->get();
+
+        // ===============================
+        // 🔥 HITUNG TOTAL
+        // ===============================
+        $totalBenar = $hasilPerKategori->sum('benar');
+        $totalSalah = $hasilPerKategori->sum('salah');
+        $totalSoal  = $hasilPerKategori->sum('jumlah');
+
+        $nilai = $totalSoal > 0
+            ? $totalBenar * 2
+            : 0;
+
+        // ===============================
+        // 🔥 CEK KATEGORI GAGAL
+        // ===============================
+        $adaGagal = false;
+
+        foreach ($hasilPerKategori as $h) {
+
+            $nilaiKategori = $h->jumlah > 0
+                ? $h->benar * 2
+                : 0;
+
+            // kategori khusus
+            $kategoriKhusus = [1, 3];
+            $min = in_array($h->id_kategori, $kategoriKhusus) ? 60 : 50;
+
+            if ($nilaiKategori < $min) {
+                $adaGagal = true;
+                break;
+            }
+        }
+
+        // ===============================
+        // 🔥 STATUS AKHIR
+        // ===============================
+        $lulusAkhir = ($nilai >= 60) && !$adaGagal;
 
         return view('frontend.data_hasil', [
             'npm' => $npm,
             'nama' => $peserta->Nama ?? '-',
             'alamat' => $peserta->Alamat ?? '-',
             'telp' => $peserta->Telp ?? '-',
-            'hasilPerKategori' => $hasilPerKategori
+
+            'hasilPerKategori' => $hasilPerKategori,
+
+            // 🔥 tambahan
+            'totalBenar' => $totalBenar,
+            'totalSalah' => $totalSalah,
+            'totalSoal'  => $totalSoal,
+            'nilai' => $nilai,
+            'lulusAkhir' => $lulusAkhir
         ]);
     }
 

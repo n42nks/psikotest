@@ -20,23 +20,26 @@
             </thead>
 
             <tbody>
-                @foreach($data as $i => $d)
-                <tr>
-                    <td>{{ $i+1 }}</td>
-                    <td>{{ $d['npm'] }}</td>
-                    <td>{{ $d['nama'] }}</td>
-                    <td>{{ $d['total'] }}</td>
-                    <td style="color:green; font-weight:bold;">{{ $d['benar'] }}</td>
-                    <td style="color:red; font-weight:bold;">{{ $d['salah'] }}</td>
-                    <td><b>{{ $d['nilai'] }}</b></td>
-                    <td>
-                        @if($d['nilai'] >= 70)
-                            <span class="label label-success">LULUS</span>
-                        @else
-                            <span class="label label-danger">TIDAK</span>
-                        @endif
-                    </td>
-                </tr>
+                @foreach ($data as $i => $d)
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td>{{ $d['npm'] }}</td>
+                        <td>{{ $d['nama'] }}</td>
+                        <td>{{ $d['total'] }}</td>
+                        <td style="color:green; font-weight:bold;">{{ $d['benar'] }}</td>
+                        <td style="color:red; font-weight:bold;">{{ $d['salah'] }}</td>
+                        <td><b>{{ $d['nilai'] }}</b></td>
+                        <td>
+                            @php
+                                $lulusAkhir = $d['nilai'] >= 60 && !$d['ada_gagal'];
+                            @endphp
+                            @if ($lulusAkhir)
+                                <span class="label label-success">LULUS</span>
+                            @else
+                                <span class="label label-danger">TIDAK LULUS</span>
+                            @endif
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
 

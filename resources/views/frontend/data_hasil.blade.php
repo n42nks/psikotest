@@ -140,6 +140,7 @@
                 </div>
 
                 <!-- HASIL -->
+                <!-- HASIL -->
                 <div class="box" style="padding:15px; border-radius:10px;">
                     <h4><b>Hasil Per Kategori</b></h4>
 
@@ -150,44 +151,84 @@
                             <th>Benar</th>
                             <th>Salah</th>
                             <th>Nilai</th>
+                            <th>Status</th>
                         </tr>
 
                         @php
                             $total_benar = 0;
                             $total_salah = 0;
                             $total_soal = 0;
+                            $adaGagal = false;
                         @endphp
 
                         @foreach ($hasilPerKategori as $hasil)
                             @php
-                                $total_benar += $hasil->hasil;
+                                // 🔥 TOTAL
+                                $total_benar += $hasil->benar;
                                 $total_salah += $hasil->salah;
                                 $total_soal += $hasil->jumlah;
+
+                                // 🔥 HITUNG NILAI DULU
+                                $nilai = $hasil->benar * 2;
+
+                                // 🔥 ATUR MINIMAL
+                                $kategoriKhusus = [1, 3];
+                                $min = in_array($hasil->id_kategori, $kategoriKhusus) ? 60 : 50;
+
+                                // 🔥 STATUS
+                                $lulus = $nilai >= $min;
+
+                                if (!$lulus) {
+                                    $adaGagal = true;
+                                }
                             @endphp
-                            <tr>
+
+                            <tr style="{{ !$lulus ? 'background:#ffe5e5;' : '' }}">
                                 <td>{{ $hasil->kategori }}</td>
-                                <td style="white-space: normal; word-break: break-word;">{{ $hasil->jumlah }}</td>
-                                <td style="color:green; font-weight:bold;">{{ $hasil->hasil }}</td>
+                                <td>{{ $hasil->jumlah }}</td>
+                                <td style="color:green; font-weight:bold;">{{ $hasil->benar }}</td>
                                 <td style="color:red; font-weight:bold;">{{ $hasil->salah }}</td>
-                                @php
-                                    // $nilai = $hasil->jumlah > 0 ? round(($hasil->hasil / $hasil->jumlah) * 100,2) : 0;
-                                    $skor = $hasil->hasil * 2; // benar × 2
-                                    $max_skor = $hasil->jumlah * 2; // total soal × 2
-
-                                    $nilai = $max_skor > 0 ? round(($skor / $max_skor) * 100) : 0;
-                                @endphp
                                 <td>
-                                    {{ $nilai }} <br>
-                                    <small>{{ $skor }} / {{ $max_skor }}</small>
+                                    <b>{{ $nilai }}
+                                </b>( <small>{{ round(($hasil->benar / $hasil->jumlah) * 100) }}%</small> )
                                 </td>
-
+                                <td>
+                                    @if ($lulus)
+                                        <span style="color:green; font-weight:bold;">✅ LULUS</span>
+                                    @else
+                                        <span style="color:red; font-weight:bold;">❌ TIDAK LULUS</span>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </table>
                 </div>
 
+                {{-- @php
+                    $totalNilai = 0;
+
+                    foreach ($hasilPerKategori as $h) {
+                        $totalNilai += $h->benar * 2;
+                    }
+
+                    $total_nilai = count($hasilPerKategori) > 0 ? round($totalNilai / count($hasilPerKategori)) : 0;
+
+                    // 🔥 STATUS AKHIR
+                    $lulusAkhir = $total_nilai >= 60 && !$adaGagal;
+                @endphp
+
+                @if ($lulusAkhir)
+                    <div class="alert alert-success text-center" style="margin-top:20px;">
+                        ✅ LULUS
+                    </div>
+                @else
+                    <div class="alert alert-danger text-center" style="margin-top:20px;">
+                        ❌ TIDAK LULUS
+                    </div>
+                @endif --}}
+
                 <!-- SUMMARY -->
-                <div style="display:flex; gap:15px; margin-top:20px; flex-wrap:wrap;">
+                {{-- <div style="display:flex; gap:15px; margin-top:20px; flex-wrap:wrap;">
 
                     <div
                         style="flex:1; background:#3b82f6; color:white; padding:15px; border-radius:10px; text-align:center;">
@@ -203,16 +244,13 @@
                         style="flex:1; background:#ef4444; color:white; padding:15px; border-radius:10px; text-align:center;">
                         Salah<br><b>{{ $total_salah }}</b>
                     </div>
-                    @php
-                        $total_nilai = $total_soal > 0 ? round(($total_benar / $total_soal) * 100, 2) : 0;
-                    @endphp
 
                     <div
                         style="flex:1; background:#f97316; color:white; padding:15px; border-radius:10px; text-align:center;">
-                        Nilai<br><b>{{ $total_nilai }}</b>
+                        Nilai Rata-Rata<br><b>{{ $total_nilai }}</b>
                     </div>
 
-                </div>
+                </div> --}}
 
                 @if ($total_soal === 0)
                     <p style="text-align:center; color:red; margin-top:20px;">

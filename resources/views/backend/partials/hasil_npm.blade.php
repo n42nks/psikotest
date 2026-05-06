@@ -85,7 +85,18 @@
             <div class="box-header">
                 <b>Rekapitulasi Nilai</b>
             </div>
+            @php
+                $totalNilai = 0;
 
+                foreach ($hasilPerKategori as $h) {
+                    $totalNilai += $h->benar * 2;
+                }
+
+                $total_nilai = count($hasilPerKategori) > 0 ? round($totalNilai / count($hasilPerKategori)) : 0;
+
+                // 🔥 STATUS AKHIR
+                $lulusAkhir = $total_nilai >= 60 && !$adaGagal;
+            @endphp
             <div class="box-body">
 
                 <div style="display:flex; gap:15px; justify-content:space-between; flex-wrap:wrap;">
@@ -110,8 +121,8 @@
 
                     <div
                         style="flex:1; background:#f97316; color:white; padding:15px; border-radius:10px; text-align:center;">
-                        Nilai<br>
-                        <h3>{{ $nilai }}</h3>
+                        Nilai Rata-Rata<br>
+                        <h3>{{ $total_nilai }}</h3>
                     </div>
 
                 </div>
@@ -122,11 +133,6 @@
                             ⚠ Ada kategori yang tidak memenuhi nilai minimum
                         </div>
                     @endif
-
-                    <!-- 🔥 STATUS AKHIR -->
-                    @php
-                        $lulusAkhir = $nilai >= 60 && !$adaGagal;
-                    @endphp
 
                     <div style="margin-top:15px;">
                         @if ($lulusAkhir)
