@@ -1,6 +1,5 @@
-@extends('frontend/dashboard')
-@section('pendaftar', 'active')
-@section('css')
+<?php $__env->startSection('pendaftar', 'active'); ?>
+<?php $__env->startSection('css'); ?>
     <style type="text/css">
         html,
         body {
@@ -32,7 +31,8 @@
         .box-body {
             flex: 1;
             overflow-y: auto;
-            padding: 15px 25px;
+            /* ✅ biar bisa scroll */
+            padding: 30px 60px;
             scroll-behavior: smooth;
         }
 
@@ -77,6 +77,7 @@
         /* RADIO */
         .opsi input {
             margin-top: 4px;
+            /* 🔥 sejajarkan dengan text */
             transform: scale(1.2);
             flex-shrink: 0;
         }
@@ -116,7 +117,7 @@
         .header-modern {
             background: linear-gradient(135deg, #243A6B, #1e2f57);
             color: white;
-            padding: 10px 15px;
+            padding: 20px;
             border-radius: 16px 16px 0 0;
         }
 
@@ -138,8 +139,7 @@
 
         /* BOX TIMER */
         .timer-box {
-            padding: 6px 12px;
-            min-width: 100px;
+            padding: 12px 20px;
             border-radius: 12px;
             text-align: center;
             min-width: 140px;
@@ -154,7 +154,7 @@
 
         /* VALUE */
         .timer-box .value {
-            font-size: 16px;
+            font-size: 22px;
             font-weight: bold;
             margin-top: 5px;
         }
@@ -186,21 +186,19 @@
             }
         }
     </style>
-@endsection
-@section('atas')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('atas'); ?>
     <header class="main-header">
 
         <!-- LOGO -->
         <a href="#" class="logo" style="background:#243A6B; border-right:1px solid rgba(255,255,255,0.1);">
 
             <!-- MINI -->
-            {{-- <span class="logo">
-                <img src="{{ asset('img/asia-putih.png') }}" width="50">
-            </span> --}}
+            
 
             <!-- FULL -->
             <span class="logo-lg">
-                <img src="{{ asset('img/asia-putih.png') }}" height="50">
+                <img src="<?php echo e(asset('img/asia-putih.png')); ?>" height="50">
                 <span style="color:white; font-size:13px; font-weight:bold;">
                     Sistem CAT
                 </span>
@@ -214,17 +212,18 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    @yield('navbar-extra')
+                    <?php echo $__env->yieldContent('navbar-extra'); ?>
 
                     <!-- USER -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                            <img src="{{ asset('img/logo_tok1.png') }}" class="user-image"
+                            <img src="<?php echo e(asset('img/logo_tok1.png')); ?>" class="user-image"
                                 style="border-radius:50%; border:2px solid #F97316;">
 
                             <span class="hidden-xs" style="color:white;">
-                                {{ session()->get('nama') }}
+                                <?php echo e(session()->get('nama')); ?>
+
                             </span>
                         </a>
 
@@ -232,7 +231,7 @@
                         <ul class="dropdown-menu">
 
                             <li class="user-header" style="background:#243A6B;">
-                                <img src="{{ asset('img/logo_tok1.png') }}" class="img-circle" alt="User Image">
+                                <img src="<?php echo e(asset('img/logo_tok1.png')); ?>" class="img-circle" alt="User Image">
 
                                 <p>
                                     Sistem CAT<br>
@@ -245,7 +244,7 @@
                                     <a href="#" class="btn btn-default btn-flat">Profil</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="{{ url('/logout') }}" class="btn btn-danger btn-flat">
+                                    <a href="<?php echo e(url('/logout')); ?>" class="btn btn-danger btn-flat">
                                         Logout
                                     </a>
                                 </div>
@@ -259,20 +258,20 @@
 
         </nav>
     </header>
-@endsection
-@section('navbar-extra')
-    @if (session('status_test_selesai'))
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('navbar-extra'); ?>
+    <?php if(session('status_test_selesai')): ?>
         <li class="user user-menu">
-            <a href="{{ url('/datahasil') }}">Hasil test</a>
+            <a href="<?php echo e(url('/datahasil')); ?>">Hasil test</a>
         </li>
         <li class="user user-menu">
-            <a href="{{ url('/info') }}">Informasi</a>
+            <a href="<?php echo e(url('/info')); ?>">Informasi</a>
         </li>
-    @endif
-@endsection
-@section('content')
-    <form id="yesform" action="{{ url('/storetpa') }}" method="POST">
-        @csrf
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <form id="yesform" action="<?php echo e(url('/storetpa')); ?>" method="POST">
+        <?php echo csrf_field(); ?>
         <input type="hidden" name="waktu_habis" id="waktu_habis" value="0">
         <div class="box box-purple">
 
@@ -302,29 +301,30 @@
 
                 <div id="soal-container">
 
-                    @foreach ($tpa as $index => $item)
-                        <div class="soal-item" data-index="{{ $index }}" style="display:none;">
-                            <input type="hidden" name="{{ 'ferin' . $item->id_soal }}" value="{{ $item->id_soal }}">
-                            <input type="hidden" name="id_kat" value="{{ $item->id_kategori }}">
+                    <?php $__currentLoopData = $tpa; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="soal-item" data-index="<?php echo e($index); ?>" style="display:none;">
+                            <input type="hidden" name="<?php echo e('ferin' . $item->id_soal); ?>" value="<?php echo e($item->id_soal); ?>">
+                            <input type="hidden" name="id_kat" value="<?php echo e($item->id_kategori); ?>">
                             <h4 style="margin-bottom:10px;">
-                                Soal No. <b>{{ $index + 1 }}</b>
+                                Soal No. <b><?php echo e($index + 1); ?></b>
                             </h4>
 
                             <div class="soal-text">
-                                {!! $item->soal !!}
+                                <?php echo $item->soal; ?>
+
                             </div>
 
-                            @php $opsi = ['A','B','C','D','E']; @endphp
+                            <?php $opsi = ['A','B','C','D','E']; ?>
 
-                            @foreach ($opsi as $o)
+                            <?php $__currentLoopData = $opsi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $o): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <label class="opsi">
-                                    <input type="radio" name="pilihan{{ $item->id_soal }}" value="{{ $o }}">
-                                    <span>{!! $item->$o !!}</span>
+                                    <input type="radio" name="pilihan<?php echo e($item->id_soal); ?>" value="<?php echo e($o); ?>">
+                                    <span><?php echo $item->$o; ?></span>
                                 </label>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                 </div>
 
@@ -339,17 +339,17 @@
 
         </div>
     </form>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
     <script>
         $(document).ready(function() {
 
             let soal = $('.soal-item');
             let totalSoal = soal.length;
 
-            let totalMenit = {{ session('menit') }};
-            let totalDetik = {{ session('detik') }};
+            let totalMenit = <?php echo e(session('menit')); ?>;
+            let totalDetik = <?php echo e(session('detik')); ?>;
 
             let totalWaktu = (totalMenit * 60) + totalDetik;
             let waktuPerSoal = Math.floor(totalWaktu / totalSoal);
@@ -497,4 +497,6 @@
 
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\psikotest\resources\views/frontend/soaldisc.blade.php ENDPATH**/ ?>

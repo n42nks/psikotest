@@ -1,6 +1,5 @@
-@extends('frontend/dashboard')
-@section('pendaftar', 'active')
-@section('css')
+<?php $__env->startSection('pendaftar', 'active'); ?>
+<?php $__env->startSection('css'); ?>
     <style>
         @keyframes fadeUp {
             from {
@@ -14,15 +13,15 @@
             }
         }
     </style>
-@endsection
-@section('atas')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('atas'); ?>
     <header class="main-header">
 
         <!-- LOGO -->
         <a href="#" class="logo" style="background:#243A6B; border-right:1px solid rgba(255,255,255,0.1);">
             <!-- FULL -->
             <span class="logo-lg">
-                <img src="{{ asset('img/asia-putih.png') }}" height="50">
+                <img src="<?php echo e(asset('img/asia-putih.png')); ?>" height="50">
                 <span style="color:white; font-size:13px; font-weight:bold;">
                     Sistem CAT
                 </span>
@@ -36,17 +35,18 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    @yield('navbar-extra')
+                    <?php echo $__env->yieldContent('navbar-extra'); ?>
 
                     <!-- USER -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                            <img src="{{ asset('img/logo_tok1.png') }}" class="user-image"
+                            <img src="<?php echo e(asset('img/logo_tok1.png')); ?>" class="user-image"
                                 style="border-radius:50%; border:2px solid #F97316;">
 
                             <span class="hidden-xs" style="color:white;">
-                                {{ session()->get('nama') }}
+                                <?php echo e(session()->get('nama')); ?>
+
                             </span>
                         </a>
 
@@ -54,7 +54,7 @@
                         <ul class="dropdown-menu">
 
                             <li class="user-header" style="background:#243A6B;">
-                                <img src="{{ asset('img/logo_tok1.png') }}" class="img-circle" alt="User Image">
+                                <img src="<?php echo e(asset('img/logo_tok1.png')); ?>" class="img-circle" alt="User Image">
 
                                 <p>
                                     Sistem CAT<br>
@@ -67,7 +67,7 @@
                                     <a href="#" class="btn btn-default btn-flat">Profil</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="{{ url('/logout') }}" class="btn btn-danger btn-flat">
+                                    <a href="<?php echo e(url('/logout')); ?>" class="btn btn-danger btn-flat">
                                         Logout
                                     </a>
                                 </div>
@@ -81,21 +81,21 @@
 
         </nav>
     </header>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <div class="container">
 
         <h3 style="margin-bottom:20px; font-weight:bold;">
             <i class="fa fa-desktop text-primary"></i> Dashboard Pilihan Soal CAT
         </h3>
-        @php
+        <?php
             $npm = session()->get('npm');
 
             $statusTes = DB::table('status_tes')->where('npm', $npm)->pluck('status', 'id_kategori');
-        @endphp
-        @php
+        ?>
+        <?php
             $menus = [
                 [
                     'id' => 1,
@@ -140,8 +140,8 @@
                     'url' => '/nalartest/6',
                 ]
             ];
-        @endphp
-        @php
+        ?>
+        <?php
             $semuaSelesai = true;
 
             foreach ($menus as $m) {
@@ -150,8 +150,8 @@
                     break;
                 }
             }
-        @endphp
-        @if ($semuaSelesai)
+        ?>
+        <?php if($semuaSelesai): ?>
             <div
                 style="
                 background: linear-gradient(135deg, #22c55e, #16a34a);
@@ -165,9 +165,7 @@
                 overflow: hidden;animation: fadeUp 0.6s ease;">
 
                 <!-- ICON BESAR -->
-                {{-- <div style="font-size:50px; margin-bottom:10px;">
-                    🎉
-                </div> --}}
+                
 
                 <!-- TITLE -->
                 <h3 style="font-weight:bold; margin-bottom:10px;">
@@ -180,7 +178,7 @@
                 </p>
 
                 <!-- BUTTON -->
-                <a href="{{ url('/datahasil') }}"
+                <a href="<?php echo e(url('/datahasil')); ?>"
                     style="
                     display:inline-block;
                     padding:12px 30px;
@@ -209,18 +207,18 @@
                 </div>
 
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="row">
 
             <!-- CARD -->
 
 
-            @php
+            <?php
                 $bolehAkses = true;
-            @endphp
+            ?>
 
-            @foreach ($menus as $m)
+            <?php $__currentLoopData = $menus; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="col-md-4">
                     <div class="box"
                         style="border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.08); margin-bottom:20px; transition:0.3s;">
@@ -228,59 +226,61 @@
                         <div class="box-body text-center">
 
                             <!-- ICON -->
-                            <img src="{{ asset('img/' . $m['img']) }}" style="width:100px; margin-bottom:5px;">
+                            <img src="<?php echo e(asset('img/' . $m['img'])); ?>" style="width:100px; margin-bottom:5px;">
 
                             <!-- TITLE -->
                             <h4 style="font-weight:bold; color:#243A6B;">
-                                {{ $m['nama'] }}
+                                <?php echo e($m['nama']); ?>
+
                             </h4>
 
                             <!-- DESC -->
                             <p style="font-size:12px; color:#777;">
-                                {{ $m['detail'] }}
+                                <?php echo e($m['detail']); ?>
+
                             </p>
 
-                            @php
+                            <?php
                                 $status = isset($statusTes[$m['id']]) ? $statusTes[$m['id']] : 0;
-                            @endphp
+                            ?>
 
-                            @if ($status)
+                            <?php if($status): ?>
                                 <!-- ✅ SUDAH SELESAI -->
                                 <button class="btn btn-block" style="background:#22c55e; color:white;" disabled>
                                     ✔ Selesai
                                 </button>
-                            @elseif($bolehAkses && !$semuaSelesai)
+                            <?php elseif($bolehAkses && !$semuaSelesai): ?>
                                 <!-- ✅ BOLEH DIKERJAKAN -->
-                                <a href="{{ url($m['url']) }}">
+                                <a href="<?php echo e(url($m['url'])); ?>">
                                     <button class="btn btn-block"
                                         style="background:linear-gradient(90deg,#F97316,#FB923C); color:white; border-radius:8px;">
                                         ▶ Kerjakan
                                     </button>
                                 </a>
 
-                                @php
+                                <?php
                                     $bolehAkses = false; // 🔥 setelah ini, berikutnya dikunci
-                                @endphp
-                            @else
+                                ?>
+                            <?php else: ?>
                                 <!-- 🔒 TERKUNCI -->
                                 <button class="btn btn-block" style="background:#ccc; color:#666; cursor:not-allowed;"
                                     disabled>
                                     🔒 Terkunci
                                 </button>
-                            @endif
+                            <?php endif; ?>
 
                         </div>
 
                     </div>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
         </div>
 
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
 
     <script type="text/javascript">
@@ -293,7 +293,7 @@
             for (let i = 1; i <= 100; i++) {
                 localStorage.removeItem('pilihan' + i);
             }
-            var stslogin = "{{ session()->get('stslogin') }}";
+            var stslogin = "<?php echo e(session()->get('stslogin')); ?>";
 
             if (stslogin == 2) {
                 swal(
@@ -303,7 +303,7 @@
                 );
             }
 
-            var ststpa = "{{ session()->get('ststpa') }}";
+            var ststpa = "<?php echo e(session()->get('ststpa')); ?>";
 
             if (ststpa == 1) {
                 swal(
@@ -312,7 +312,7 @@
                     'error'
                 );
             }
-            var stsbig = "{{ session()->get('stsbig') }}";
+            var stsbig = "<?php echo e(session()->get('stsbig')); ?>";
 
             if (stsbig == 3) {
                 swal(
@@ -324,4 +324,6 @@
 
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\psikotest\resources\views/frontend/pilihsoal.blade.php ENDPATH**/ ?>

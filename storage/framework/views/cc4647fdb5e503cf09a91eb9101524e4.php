@@ -1,7 +1,6 @@
-@extends('frontend/dashboard')
-@section('pendaftar', 'active')
+<?php $__env->startSection('pendaftar', 'active'); ?>
 
-@section('css')
+<?php $__env->startSection('css'); ?>
     <style>
         /* PROFILE CARD */
         .card-profile-modern {
@@ -102,9 +101,9 @@
             transform: translateY(-2px);
         }
     </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <div class="container" style="margin-top:30px;">
 
@@ -114,17 +113,17 @@
         <div class="col-md-4">
             <div class="card-profile-modern text-center">
 
-                <img src="{{ asset('img/icon.png') }}" class="avatar">
+                <img src="<?php echo e(asset('img/icon.png')); ?>" class="avatar">
 
-                <h3 class="name">{{ session()->get('nama') }}</h3>
+                <h3 class="name"><?php echo e(session()->get('nama')); ?></h3>
 
                 <div class="info">
-                    <div><span>No Peserta</span><b>{{ session()->get('npm') }}</b></div>
-                    <div><span>Tanggal Lahir</span><b>{{ session()->get('tgl') }}</b></div>
-                    <div><span>Alamat</span><b>{{ session()->get('tmp') }}</b></div>
+                    <div><span>No Peserta</span><b><?php echo e(session()->get('npm')); ?></b></div>
+                    <div><span>Tanggal Lahir</span><b><?php echo e(session()->get('tgl')); ?></b></div>
+                    <div><span>Alamat</span><b><?php echo e(session()->get('tmp')); ?></b></div>
                 </div>
 
-                <a href="{{ url('/logout') }}" class="btn-logout">
+                <a href="<?php echo e(url('/logout')); ?>" class="btn-logout">
                     Logout
                 </a>
 
@@ -164,7 +163,7 @@
                     </div>
 
                     <!-- BUTTON -->
-                    <a href="{{ url('/hitung/4') }}" class="btn-start">
+                    <a href="<?php echo e(url('/nalar/6')); ?>" class="btn-start">
                         🚀 Kerjakan Sekarang
                     </a>
 
@@ -176,15 +175,15 @@
     </div>
 
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
 
-            var stslogin = "{{ session()->get('stslogin') }}";
+            var stslogin = "<?php echo e(session()->get('stslogin')); ?>";
 
             if (stslogin == 1) {
                 swal(
@@ -197,4 +196,6 @@
         });
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\psikotest\resources\views/frontend/konfirmnalar.blade.php ENDPATH**/ ?>

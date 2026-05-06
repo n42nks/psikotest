@@ -20,7 +20,12 @@ class SoalTpaController extends Controller
      */
     public function index()
     {
-        $select = DB::select('select * from soaltpa');
+        // $select = DB::select('select * from soaltpa');
+        $select =DB::table('soaltpa')
+            ->join('tb_kategori','soaltpa.id_kategori','=','tb_kategori.id_kategori')
+            ->select('soaltpa.*','tb_kategori.kategori')
+            ->get();
+
         return view ('backend.DataSoalTpa.DaftarSoal')->with('soal',$select);
     }
 
@@ -91,7 +96,7 @@ class SoalTpaController extends Controller
      */
     public function show($id)
     {
-         $Soal = SoalTpa::find($id);
+        $Soal = SoalTpa::find($id);
         $kategori = kategori::all();
 
         return view('backend.DataSoalTpa.UbahSoal', ['Soal'=>$Soal, 'kategori'=>$kategori]);

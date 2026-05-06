@@ -121,7 +121,7 @@
                 <div class="info">
                     <div><span>No Peserta</span><b>{{ session()->get('npm') }}</b></div>
                     <div><span>Tanggal Lahir</span><b>{{ session()->get('tgl') }}</b></div>
-                    <div><span>Alamaty</span><b>{{ session()->get('tmp') }}</b></div>
+                    <div><span>Alamat</span><b>{{ session()->get('tmp') }}</b></div>
                 </div>
 
                 <a href="{{ url('/logout') }}" class="btn-logout">
@@ -144,11 +144,11 @@
                 <div class="body-instruction">
 
                     <div class="rule">
-                        ⏱ Waktu pengerjaan: <b>30 Menit</b>
+                        ⏱ Waktu pengerjaan: <b>60 Menit</b>
                     </div>
 
                     <div class="rule">
-                        📄 Jumlah soal: <b>25 soal</b> (pilihan ganda)
+                        📄 Jumlah soal: <b>50 soal</b> (pilihan ganda)
                     </div>
 
                     <div class="rule">

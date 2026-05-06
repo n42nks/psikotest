@@ -157,6 +157,9 @@ class HasilController extends Controller
 
         foreach ($peserta as $p) {
 
+            // ===============================
+            // 🔥 TOTAL GLOBAL
+            // ===============================
             $hasil = DB::table('tb_jawab_peserta as j')
                 ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
                 ->select(
@@ -177,40 +180,58 @@ class HasilController extends Controller
             $benar = $hasil->benar ?? 0;
             $salah = $hasil->salah ?? 0;
 
-            $nilai = $totalSoal > 0
-                ? round(($benar / $totalSoal) * 100, 2)
-                : 0;
-
+            // ===============================
+            // 🔥 PER KATEGORI
+            // ===============================
             $hasilKategori = DB::table('tb_jawab_peserta as j')
                 ->join('soaltpa as s', 'j.id_soal', '=', 's.id_soal')
                 ->join('tb_kategori as k', 's.id_kategori', '=', 'k.id_kategori')
                 ->select(
                     'k.id_kategori',
                     DB::raw('COUNT(s.id_soal) as jumlah'),
-                    DB::raw('SUM(CASE WHEN j.jawaban_peserta = s.jawaban THEN 1 ELSE 0 END) as benar')
+                    DB::raw('SUM(CASE
+                        WHEN j.jawaban_peserta = s.jawaban
+                        THEN 1 ELSE 0 END) as benar')
                 )
                 ->where('j.npm', $p->NPM)
                 ->groupBy('k.id_kategori')
                 ->get();
 
             $adaGagal = false;
+            $totalNilaiKategori = 0;
+            $jumlahKategori = count($hasilKategori);
 
             foreach ($hasilKategori as $h) {
 
-                $nilaiKategori = $h->jumlah > 0
-                    ? round(($h->benar / $h->jumlah) * 100)
-                    : 0;
+                // 🔥 skor kategori (0–100)
+                $nilaiKategori = $h->benar * 2;
 
-                // 🔥 kategori khusus (Pancasila, dll)
+                // 🔥 minimal nilai
                 $kategoriKhusus = [1, 3];
                 $min = in_array($h->id_kategori, $kategoriKhusus) ? 60 : 50;
 
                 if ($nilaiKategori < $min) {
                     $adaGagal = true;
-                    break;
                 }
+
+                $totalNilaiKategori += $nilaiKategori;
             }
 
+            // ===============================
+            // 🔥 NILAI AKHIR (RATA-RATA)
+            // ===============================
+            $nilai = $jumlahKategori > 0
+                ? round($totalNilaiKategori / $jumlahKategori, 2)
+                : 0;
+            $nilai = round($nilai);
+            // ===============================
+            // 🔥 STATUS AKHIR
+            // ===============================
+            $lulus = ($nilai >= 60) && !$adaGagal;
+
+            // ===============================
+            // 🔥 SIMPAN DATA
+            // ===============================
             $data[] = [
                 'npm' => $p->NPM,
                 'nama' => $p->Nama,
@@ -218,14 +239,22 @@ class HasilController extends Controller
                 'benar' => $benar,
                 'salah' => $salah,
                 'nilai' => $nilai,
-                'ada_gagal' => $adaGagal
+                'ada_gagal' => $adaGagal,
+                'lulus' => $lulus
             ];
         }
 
-        $html = view('backend.partials.hasil_semua', compact('data'))->render();
+        // ===============================
+        // 🔥 RATA-RATA SEMUA PESERTA
+        // ===============================
+        $rataNilai = collect($data)->avg('nilai');
+        $rataNilai = round($rataNilai);
+
+        $html = view('backend.partials.hasil_semua', compact('data','rataNilai'))->render();
 
         return response()->json([
-            'data' => $html
+            'data' => $html,
+            'rata_nilai' => $rataNilai
         ]);
     }
 }

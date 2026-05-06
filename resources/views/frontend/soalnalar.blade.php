@@ -32,8 +32,7 @@
         .box-body {
             flex: 1;
             overflow-y: auto;
-            /* ✅ biar bisa scroll */
-            padding: 30px 60px;
+            padding: 15px 25px;
             scroll-behavior: smooth;
         }
 
@@ -78,7 +77,6 @@
         /* RADIO */
         .opsi input {
             margin-top: 4px;
-            /* 🔥 sejajarkan dengan text */
             transform: scale(1.2);
             flex-shrink: 0;
         }
@@ -118,7 +116,7 @@
         .header-modern {
             background: linear-gradient(135deg, #243A6B, #1e2f57);
             color: white;
-            padding: 20px;
+            padding: 10px 15px;
             border-radius: 16px 16px 0 0;
         }
 
@@ -140,7 +138,8 @@
 
         /* BOX TIMER */
         .timer-box {
-            padding: 12px 20px;
+            padding: 6px 12px;
+            min-width: 100px;
             border-radius: 12px;
             text-align: center;
             min-width: 140px;
@@ -155,7 +154,7 @@
 
         /* VALUE */
         .timer-box .value {
-            font-size: 22px;
+            font-size: 16px;
             font-weight: bold;
             margin-top: 5px;
         }

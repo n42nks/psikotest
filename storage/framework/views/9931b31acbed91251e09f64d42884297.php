@@ -1,6 +1,5 @@
-@extends('frontend/dashboard')
-@section('pendaftar', 'active')
-@section('css')
+<?php $__env->startSection('pendaftar', 'active'); ?>
+<?php $__env->startSection('css'); ?>
 
     <style>
         .card-modern {
@@ -102,17 +101,17 @@
             word-break: break-word;
         }
     </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container">
         <div class="box" style="border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.08);padding-bottom:20px;">
 
             <!-- HEADER -->
             <div style="text-align:center; padding:20px;">
-                <img src="{{ asset('img/logo_atc.png') }}" height="80">
+                <img src="<?php echo e(asset('img/logo_atc.png')); ?>" height="80">
                 <h4 style="margin:5px 0;">Laporan Sistem CAT seleksi perangkat desa</h4>
-                {{-- <small>Laporan Sistem CAT seleksi perangkat desa</small> --}}
+                
             </div>
 
             <div style="background:#243A6B; color:white; padding:10px; text-align:center;">
@@ -131,10 +130,10 @@
                             <th>Telepon</th>
                         </tr>
                         <tr>
-                            <td>{{ $npm }}</td>
-                            <td>{{ $nama }}</td>
-                            <td>{{ $alamat }}</td>
-                            <td>{{ $telp }}</td>
+                            <td><?php echo e($npm); ?></td>
+                            <td><?php echo e($nama); ?></td>
+                            <td><?php echo e($alamat); ?></td>
+                            <td><?php echo e($telp); ?></td>
                         </tr>
                     </table>
                 </div>
@@ -154,15 +153,15 @@
                             <th>Status</th>
                         </tr>
 
-                        @php
+                        <?php
                             $total_benar = 0;
                             $total_salah = 0;
                             $total_soal = 0;
                             $adaGagal = false;
-                        @endphp
+                        ?>
 
-                        @foreach ($hasilPerKategori as $hasil)
-                            @php
+                        <?php $__currentLoopData = $hasilPerKategori; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $hasil): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php
                                 // 🔥 TOTAL
                                 $total_benar += $hasil->benar;
                                 $total_salah += $hasil->salah;
@@ -181,86 +180,44 @@
                                 if (!$lulus) {
                                     $adaGagal = true;
                                 }
-                            @endphp
+                            ?>
 
-                            <tr style="{{ !$lulus ? 'background:#ffe5e5;' : '' }}">
-                                <td>{{ $hasil->kategori }}</td>
-                                <td>{{ $hasil->jumlah }}</td>
-                                <td style="color:green; font-weight:bold;">{{ $hasil->benar }}</td>
-                                <td style="color:red; font-weight:bold;">{{ $hasil->salah }}</td>
+                            <tr style="<?php echo e(!$lulus ? 'background:#ffe5e5;' : ''); ?>">
+                                <td><?php echo e($hasil->kategori); ?></td>
+                                <td><?php echo e($hasil->jumlah); ?></td>
+                                <td style="color:green; font-weight:bold;"><?php echo e($hasil->benar); ?></td>
+                                <td style="color:red; font-weight:bold;"><?php echo e($hasil->salah); ?></td>
                                 <td>
-                                    <b>{{ $nilai }}
-                                </b>( <small>{{ round(($hasil->benar / $hasil->jumlah) * 100) }}%</small> )
+                                    <b><?php echo e($nilai); ?>
+
+                                </b>( <small><?php echo e(round(($hasil->benar / $hasil->jumlah) * 100)); ?>%</small> )
                                 </td>
                                 <td>
-                                    @if ($lulus)
+                                    <?php if($lulus): ?>
                                         <span style="color:green; font-weight:bold;">✅ LULUS</span>
-                                    @else
+                                    <?php else: ?>
                                         <span style="color:red; font-weight:bold;">❌ TIDAK LULUS</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </table>
                 </div>
 
-                {{-- @php
-                    $totalNilai = 0;
-
-                    foreach ($hasilPerKategori as $h) {
-                        $totalNilai += $h->benar * 2;
-                    }
-
-                    $total_nilai = count($hasilPerKategori) > 0 ? round($totalNilai / count($hasilPerKategori)) : 0;
-
-                    // 🔥 STATUS AKHIR
-                    $lulusAkhir = $total_nilai >= 60 && !$adaGagal;
-                @endphp
-
-                @if ($lulusAkhir)
-                    <div class="alert alert-success text-center" style="margin-top:20px;">
-                        ✅ LULUS
-                    </div>
-                @else
-                    <div class="alert alert-danger text-center" style="margin-top:20px;">
-                        ❌ TIDAK LULUS
-                    </div>
-                @endif --}}
+                
 
                 <!-- SUMMARY -->
-                {{-- <div style="display:flex; gap:15px; margin-top:20px; flex-wrap:wrap;">
+                
 
-                    <div
-                        style="flex:1; background:#3b82f6; color:white; padding:15px; border-radius:10px; text-align:center;">
-                        Total Soal<br><b>{{ $total_soal }}</b>
-                    </div>
-
-                    <div
-                        style="flex:1; background:#22c55e; color:white; padding:15px; border-radius:10px; text-align:center;">
-                        Benar<br><b>{{ $total_benar }}</b>
-                    </div>
-
-                    <div
-                        style="flex:1; background:#ef4444; color:white; padding:15px; border-radius:10px; text-align:center;">
-                        Salah<br><b>{{ $total_salah }}</b>
-                    </div>
-
-                    <div
-                        style="flex:1; background:#f97316; color:white; padding:15px; border-radius:10px; text-align:center;">
-                        Nilai Rata-Rata<br><b>{{ $total_nilai }}</b>
-                    </div>
-
-                </div> --}}
-
-                @if ($total_soal === 0)
+                <?php if($total_soal === 0): ?>
                     <p style="text-align:center; color:red; margin-top:20px;">
                         ⚠ Belum mengerjakan ujian
                     </p>
-                @endif
+                <?php endif; ?>
 
             </div>
             <div style="text-align:center; margin-top:25px;margin-bottom:25px;">
-                <a href="{{ url('/pilihsoal') }}"
+                <a href="<?php echo e(url('/pilihsoal')); ?>"
                     style="display:inline-block;padding:10px 25px;background:#243A6B;color:white;border-radius:10px;text-decoration:none;font-weight:bold;transition:0.3s;       "
                     onmouseover="this.style.background='#1e2f57'" onmouseout="this.style.background='#243A6B'">
                     ← Kembali ke Beranda
@@ -271,4 +228,6 @@
 
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\psikotest\resources\views/frontend/data_hasil.blade.php ENDPATH**/ ?>

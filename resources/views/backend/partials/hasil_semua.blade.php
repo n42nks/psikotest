@@ -14,12 +14,13 @@
                     <th>Soal</th>
                     <th>Benar</th>
                     <th>Salah</th>
-                    <th>Nilai</th>
+                    <th>Nilai Rata2</th>
                     <th>Status</th>
                 </tr>
             </thead>
 
             <tbody>
+
                 @foreach ($data as $i => $d)
                     <tr>
                         <td>{{ $i + 1 }}</td>
@@ -28,12 +29,11 @@
                         <td>{{ $d['total'] }}</td>
                         <td style="color:green; font-weight:bold;">{{ $d['benar'] }}</td>
                         <td style="color:red; font-weight:bold;">{{ $d['salah'] }}</td>
-                        <td><b>{{ $d['nilai'] }}</b></td>
                         <td>
-                            @php
-                                $lulusAkhir = $d['nilai'] >= 60 && !$d['ada_gagal'];
-                            @endphp
-                            @if ($lulusAkhir)
+                            <b>{{ $d['nilai'] }}</b>
+                        </td>
+                        <td>
+                            @if ($d['lulus'])
                                 <span class="label label-success">LULUS</span>
                             @else
                                 <span class="label label-danger">TIDAK LULUS</span>
