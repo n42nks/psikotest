@@ -129,4 +129,4 @@
             </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('backend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\psikotest\resources\views/backend/DataSoalTpa/UbahSoal.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('backend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\psikotest\resources\views/backend/DataSoalTpa/UbahSoal.blade.php ENDPATH**/ ?>

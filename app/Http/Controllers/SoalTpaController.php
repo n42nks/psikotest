@@ -10,6 +10,7 @@ use App\detail;
 use App\kategori;
 use App\TbJawabPeserta;
 use App\Models\tbpendaftar;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 class SoalTpaController extends Controller
 {
@@ -84,8 +85,46 @@ class SoalTpaController extends Controller
         DB::table('soaltpa') -> insert($data2);
 
 
-        $select = DB::select('select * from soaltpa');
+        $select =DB::table('soaltpa')
+            ->join('tb_kategori','soaltpa.id_kategori','=','tb_kategori.id_kategori')
+            ->select('soaltpa.*','tb_kategori.kategori')
+            ->get();
         return view ('backend.DataSoalTpa.DaftarSoal')->with('soal',$select);
+    }
+
+    public function importSoal(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $data = Excel::toArray([], $request->file('file'));
+
+        foreach ($data[0] as $index => $row) {
+
+            // skip header
+            if ($index == 0) continue;
+
+            // cari kategori
+            $kategori = DB::table('tb_kategori')
+                ->where('id_kategori', $row[0])
+                ->first();
+
+            if (!$kategori) continue;
+
+            DB::table('soaltpa')->insert([
+                'soal' => $row[1],
+                'jawaban' => strtoupper($row[7]),
+                'id_kategori' => $kategori->id_kategori,
+                'A' => $row[2],
+                'B' => $row[3],
+                'C' => $row[4],
+                'D' => $row[5],
+                'E' => $row[6]
+            ]);
+        }
+
+        return redirect()->back()->with('stslogin', 1);
     }
 
     /**

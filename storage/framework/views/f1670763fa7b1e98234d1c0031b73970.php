@@ -1193,4 +1193,4 @@
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 </body>
 </html>
-<?php /**PATH C:\xampp\htdocs\psikotest\resources\views/frontend/landing.blade.php ENDPATH**/ ?>
+<?php /**PATH D:\xampp\htdocs\psikotest\resources\views/frontend/landing.blade.php ENDPATH**/ ?>

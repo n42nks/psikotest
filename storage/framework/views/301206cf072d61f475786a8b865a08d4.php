@@ -1,16 +1,15 @@
-@extends('backend/dashboard')
 <!-- Content Wrapper. Contains page content -->
-@section('content')
-@section('tpa', 'active')
-@section('menusoal', 'active')
-@section('header')
+<?php $__env->startSection('content'); ?>
+<?php $__env->startSection('tpa', 'active'); ?>
+<?php $__env->startSection('menusoal', 'active'); ?>
+<?php $__env->startSection('header'); ?>
     <h1>Input Data Soal</h1>
     <br>
     <a rel="tooltip" title="Tambah" type="button" class="btn btn-primary" href="soal-tpa/show">Tambah Data</a>
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-import">
         Import Excel
     </button>
-@endsection
+<?php $__env->stopSection(); ?>
 <!-- Content Header (Page header) -->
 <div class="row">
     <div class="col-xs-12">
@@ -31,22 +30,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($soal as $data)
+                        <?php $__currentLoopData = $soal; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td style="width:5%">{{ $data->id_soal }}</td>
-                                <td style="width:50%">{!! $data->soal !!}</td>
-                                <td style="width:20%">{!! $data->kategori !!}</td>
-                                <td style="width:10%">{{ $data->jawaban }}</td>
+                                <td style="width:5%"><?php echo e($data->id_soal); ?></td>
+                                <td style="width:50%"><?php echo $data->soal; ?></td>
+                                <td style="width:20%"><?php echo $data->kategori; ?></td>
+                                <td style="width:10%"><?php echo e($data->jawaban); ?></td>
                                 <td>
-                                    <a href="soal-tpa/{{ $data->id_soal }}/edit" class="btn btn-primary">Edit</a>
-                                    <a href="#" class="btn btn-danger" data-id="{{ $data->id_soal }}"
+                                    <a href="soal-tpa/<?php echo e($data->id_soal); ?>/edit" class="btn btn-primary">Edit</a>
+                                    <a href="#" class="btn btn-danger" data-id="<?php echo e($data->id_soal); ?>"
                                         data-toggle="modal" data-target="#modal-delete">
                                         Hapus
                                     </a>
                                 </td>
 
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
@@ -70,8 +69,8 @@
             </div>
             <div class="modal-footer">
                 <form class="" id="delform" action="" method="post">
-                    @method('post')
-                    @csrf
+                    <?php echo method_field('post'); ?>
+                    <?php echo csrf_field(); ?>
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
                     <button type="submit" class="btn btn-primary">Ya</button>
 
@@ -88,8 +87,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <form action="{{ url('/admin/soal-tpa/import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <form action="<?php echo e(url('/admin/soal-tpa/import')); ?>" method="POST" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
 
                 <div class="modal-header" style="background:#00a65a; color:white;">
                     <button type="button" class="close" data-dismiss="modal">
@@ -150,13 +149,13 @@
 </form>
 
 
-@Endsection
+<?php $__env->stopSection(); ?>
 
-@section('js')
+<?php $__env->startSection('js'); ?>
 <script type="text/javascript">
     $(document).ready(function() {
 
-        var stslogin = "{{ session()->get('stslogin') }}";
+        var stslogin = "<?php echo e(session()->get('stslogin')); ?>";
 
         if (stslogin == 1) {
             Swal.fire(
@@ -179,8 +178,10 @@
 
         var modal = $(this);
 
-        $('#delform').attr('action', "{{ url('/admin/soal-tpa/delete') }}" + "/" + id);
+        $('#delform').attr('action', "<?php echo e(url('/admin/soal-tpa/delete')); ?>" + "/" + id);
     });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('backend/dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\psikotest\resources\views/backend/DataSoalTpa/DaftarSoal.blade.php ENDPATH**/ ?>

@@ -172,6 +172,8 @@ Route::group(["middleware" => "admin"], function(){
 	Route::get('admin/soal-tpa/{id}/edit','SoalTpaController@show');
 	Route::post('admin/soal-tpa','SoalTpaController@update')->name('updatesoal');
 	Route::post('admin/soal-tpa/delete/{id_soal}','SoalTpaController@destroy');
+    Route::post('/admin/soal-tpa/import','SoalTpaController@importSoal');
+
 	//hasiltpa
 	Route::get('admin/datahasiltpa','SoalTpaController@tampilhasiltpa');
 	Route::get("/admin/detail-hasil-tpa/{id}", "SoalTpaController@tampildetailhasiltpa");

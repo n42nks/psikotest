@@ -10,11 +10,6 @@ use App\datasoal;
 
 class SoalController extends Controller
 {
-//     public function index()
-//     {
-//         $data_soal=\App\datasoal::all();
-//         return view ('backend/DataSoal/data_soal', ['data_soal'=> $data_soal]);
-//     }
     public function HalSoal(datasoal $ds){
           $return = [
             "tbsoal"   => $ds->all(),
@@ -44,7 +39,7 @@ class SoalController extends Controller
                 "k_S"     => $req->k_S,
                 "k_C"     => $req->k_C
 
-            ]);         
+            ]);
             $status = 1;
             $pesan = "Data berhasil dismpan";
         } catch (Exception $e) {
